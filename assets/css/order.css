@@ -1,0 +1,159 @@
+a {
+  text-decoration: none;
+}
+
+.main {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: pop;
+  flex-direction: column;
+}
+
+.head {
+  text-align: center;
+}
+
+.head_1 {
+  font-size: 30px;
+  font-weight: 600;
+  color: #333;
+}
+
+.head_1 span {
+  color: #ff4732;
+}
+
+.head_2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-top: 3px;
+}
+
+.head {
+  display: flex;
+}
+
+.head li {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+ul li .icon {
+  font-size: 35px;
+  /* color: rgb(45, 194, 88); */
+  color: rgb(224, 224, 224);
+  margin: 0 60px;
+}
+
+ul li .text {
+  font-size: 14px;
+  font-weight: 600;
+  /* color: rgb(45, 194, 88); */
+  color: rgb(224, 224, 224);
+}
+
+/* linebar Div Css  */
+
+ul li .linebar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgb(224, 224, 224);
+  margin: 14px 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  position: relative;
+  cursor: pointer;
+}
+
+.linebar::after {
+  content: " ";
+  position: absolute;
+  width: 125px;
+  height: 5px;
+  background-color: rgb(224, 224, 224);
+  right: 30px;
+}
+
+.one::after {
+  width: 0;
+  height: 0;
+}
+
+ul li .linebar .uil {
+  display: none;
+}
+
+ul li .linebar p {
+  font-size: 13px;
+}
+
+/* Active Css  */
+
+ul li .active {
+  background-color: rgb(45, 194, 88);
+  display: grid;
+  place-items: center;
+}
+
+li .active::after {
+  background-color: rgb(45, 194, 88);
+}
+
+ul li .active p {
+  display: none;
+}
+
+ul li .active .uil {
+  font-size: 20px;
+  display: flex;
+}
+
+/* Responsive Css  */
+
+@media (max-width: 980px) {
+  ul {
+    flex-direction: column;
+  }
+
+  ul li {
+    flex-direction: row;
+  }
+
+  ul li .linebar {
+    margin: 0 30px;
+  }
+
+  .linebar::after {
+    width: 5px;
+    height: 55px;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -1;
+  }
+
+  .one::after {
+    height: 0;
+  }
+
+  ul li .icon {
+    margin: 15px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .head .head_1 {
+    font-size: 24px;
+  }
+
+  .head .head_2 {
+    font-size: 16px;
+  }
+}
