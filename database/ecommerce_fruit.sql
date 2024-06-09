@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 12, 2024 at 05:15 PM
+-- Generation Time: Jun 09, 2024 at 06:45 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -33,6 +33,14 @@ CREATE TABLE `cart` (
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`user_id`, `product_id`, `quantity`) VALUES
+(6, 1, 1),
+(1, 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -52,7 +60,8 @@ CREATE TABLE `category` (
 --
 
 INSERT INTO `category` (`category_id`, `category_name`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'Trái cây nhập khẩu', 1, '2024-05-06 23:50:47', '2024-05-06 23:50:47');
+(1, 'Trái cây nhập khẩu', 1, '2024-05-06 23:50:47', '2024-05-06 23:50:47'),
+(2, 'Trái cây nội địa', 1, '2024-05-15 22:13:12', '2024-05-15 22:13:12');
 
 -- --------------------------------------------------------
 
@@ -97,6 +106,16 @@ CREATE TABLE `order` (
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `order`
+--
+
+INSERT INTO `order` (`order_id`, `total_money`, `name`, `address`, `phone`, `message`, `payment_method`, `payment_status`, `created_at`, `status`, `shipping`, `user_id`) VALUES
+(1, 10222, 'meo meo', 'Ha Noi', '0397917086', 'ronaldo test', 'cod', 'paid', '2024-06-08 20:45:50', 'received', 3, 1),
+(4, 10001, 'meo meo', 'Ha Noi', '0397917086', '', 'banking', 'paid', '2024-06-08 21:05:36', 'canceled', 1, 1),
+(5, 10112, 'meo meo', 'Ha Noi', '0397917086', '', 'banking', 'paid', '2024-06-08 21:07:23', 'canceled', 1, 1),
+(6, 10001, 'meo meo', 'Ha Noi', '0397917086', '', 'banking', 'paid', '2024-06-08 21:18:04', 'received', 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -110,6 +129,18 @@ CREATE TABLE `order_detail` (
   `quantity` int(11) NOT NULL,
   `price` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_detail`
+--
+
+INSERT INTO `order_detail` (`order_detail_id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
+(1, 1, 3, 83, 10),
+(2, 1, 1, 1, 10),
+(5, 4, 1, 1, 10000),
+(6, 5, 2, 1, 10000),
+(7, 5, 1, 1, 10000),
+(8, 6, 1, 1, 10000);
 
 -- --------------------------------------------------------
 
@@ -137,9 +168,9 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`product_id`, `product_name`, `description`, `rate`, `created_at`, `updated_at`, `is_active`, `quantity`, `price`, `sold_quantity`, `category_id`, `fruit_type_id`) VALUES
-(1, 'Táo mĩ', 'Fresh and juicy apple', 5, '2024-05-08 00:00:00', '2024-05-08 00:00:00', 1, 100, 10, 0, 1, 1),
-(2, 'tao1', 'cascsa', 0, '2024-05-08 22:19:37', '2024-05-08 22:19:37', 1, 111, 111, 0, 1, 1),
-(3, 'tao2', 'ccc', 0, '2024-05-08 22:29:27', '2024-05-08 22:29:27', 1, 123, 123, 0, 1, 1);
+(1, 'Táo mĩ', 'Fresh and juicy apple', 5, '2024-05-08 00:00:00', '2024-05-08 00:00:00', 1, 1608, 10000, 88, 1, 1),
+(2, 'tao1', 'cascsa', 0, '2024-05-08 22:19:37', '2024-05-08 22:19:37', 1, 112, 111, 0, 1, 1),
+(3, 'tao2', 'ccc', 3, '2024-05-08 22:29:27', '2024-05-08 22:29:27', 1, 123, 123, 0, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -158,8 +189,11 @@ CREATE TABLE `product_image` (
 --
 
 INSERT INTO `product_image` (`product_image_id`, `image`, `product_id`) VALUES
-(4, '3sWQ8dHB1715182167.jpg', 3),
-(5, 'eySMUWl11715182923.jpg', 2);
+(18, 'GbKRNHJE1717950870.jpg', 1),
+(19, 'jFRPExwp1717950870.jpg', 1),
+(20, 'FSYmSsFu1717950870.jpg', 1),
+(21, 'X7sO9Wch1717950878.jpg', 2),
+(22, 'q6HAtpYN1717950884.jpg', 3);
 
 -- --------------------------------------------------------
 
@@ -177,6 +211,15 @@ CREATE TABLE `review` (
   `product_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `review`
+--
+
+INSERT INTO `review` (`review_id`, `content`, `star`, `created_at`, `updated_at`, `user_id`, `product_id`) VALUES
+(1, 'rat ngon', 4, '2024-06-09 20:58:44', '2024-06-09 20:58:44', 1, 1),
+(2, 'rat dep', 5, '2024-06-09 20:59:15', '2024-06-09 20:59:15', 1, 1),
+(3, 'ww', 3, '2024-06-09 20:59:24', '2024-06-09 20:59:24', 1, 3);
+
 -- --------------------------------------------------------
 
 --
@@ -188,6 +231,22 @@ CREATE TABLE `review_image` (
   `image` varchar(255) NOT NULL,
   `review_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `review_image`
+--
+
+INSERT INTO `review_image` (`review_image_id`, `image`, `review_id`) VALUES
+(1, 'FYtpReBz1717941524.jpg', 1),
+(2, 'FTFKgBw01717941524.jpg', 1),
+(3, 'TbjEWwxS1717941524.jpg', 1),
+(4, 'qYEwDnpP1717941524.jpg', 1),
+(5, 'AUu6kx701717941555.jpg', 2),
+(6, 'QueOczoF1717941555.jpg', 2),
+(7, 'EGuO6jJ91717941555.jpg', 2),
+(8, '5t0ZwNJE1717941555.jpg', 2),
+(9, 'IDyUE73G1717941564.jpg', 3),
+(10, 'lrGqAQM51717941564.jpg', 3);
 
 -- --------------------------------------------------------
 
@@ -217,10 +276,12 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `email`, `password`, `username`, `fullname`, `phone`, `address`, `avatar`, `role`, `created_at`, `updated_at`, `is_active`, `token`, `status`) VALUES
-(1, 'datnd10.dev@gmail.com', '$2y$10$lwNoTZzwozKyayKTeQwlYuJ63a2vVrcqcIt8reCxvzLyONwQRwmuO', 'datnd10', 'meo meo', '0397917086', 'Ha Noi', 'guest.png', 0, '2024-05-04 22:53:44', '2024-05-04 22:53:44', 1, '732018', 1),
+(1, 'datnd10.dev@gmail.com', '$2y$10$1q7LW/NiSsUcDf827G5gD.H3XZ.8qYaIUxbeueTPMEKm6Rl95J3f6', 'datnd10', 'meo meo2', '0397917086', '3, Thi tran Meo Vac, Huyen Meo Vac, Tinh Ha Giang', 'scu1N1nY1717866912.jpg', 0, '2024-05-04 22:53:44', '2024-05-04 22:53:44', 1, '732018', 1),
 (3, 'datnd10.dev@gmail.com.vn', '$2y$10$9M/RvMu1kL/bGbv2foMu5.66x7q/Zond4hn1EpWi4yal8g/Clez9C', 'dat122', 'Nguyễn Đắc Đạt', '0397917081', 'Hà Đông Hà Nội', 'yn5qjKo91714838923.jpg', 1, '2024-05-04 23:05:04', '2024-05-04 18:14:12', 1, '', 1),
 (4, 'datnd10.dev@gmail.com.vn.uy', '$2y$10$/fTOmcf3KDYWFcIE/eUtle9fv0F064M5Rt6csac6waLwPfxSm1sNy', 'dat', 'Nguyễn Đắc Đạt', '0397917082', 'Hà Đông Hà Nội', 'DP567TYA1714841138.jpg', 1, '2024-05-04 23:14:43', '2024-05-04 23:54:46', 1, '', 1),
-(5, 'runaldi@gmail.com', '$2y$10$ibx714ZrmCI2CFOZMSFs.uN6ttthQvG.YeP5hrRyOwStkOvca5Qeq', 'runaldo1', '123', '0397917065', '123', 'guest.png', 0, '2024-05-04 23:48:12', '2024-05-04 18:48:29', 1, '', 1);
+(5, 'runaldi@gmail.com', '$2y$10$ibx714ZrmCI2CFOZMSFs.uN6ttthQvG.YeP5hrRyOwStkOvca5Qeq', 'runaldo1', '123', '0397917065', '123', 'guest.png', 0, '2024-05-04 23:48:12', '2024-05-04 18:48:29', 1, '', 1),
+(6, 'datndhe172134@fpt.edu.vn', '$2y$10$qRvJvHwq3zvrvM4NWbHCeeZHqvmCCqoifuOGf3nIw/qAoaLaEfBNi', 'datkkk', '', '0987654321', '', 'guest.png', 1, '2024-05-12 23:24:33', '2024-05-12 23:24:33', 1, '871990', 1),
+(7, 'nguyendacdat7890@gmail.com', '$2y$10$kUo0Kd7on4/UEwXdVRHEm.vhhZHfOBnA2OX2xvGNfi95ZJfggSwDi', '2222', '', '0987651234', '', 'guest.png', 1, '2024-06-08 21:33:20', '2024-06-08 21:33:20', 1, '833069', 1);
 
 --
 -- Indexes for dumped tables
@@ -307,7 +368,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `fruit_type`
@@ -319,13 +380,13 @@ ALTER TABLE `fruit_type`
 -- AUTO_INCREMENT for table `order`
 --
 ALTER TABLE `order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `order_detail`
 --
 ALTER TABLE `order_detail`
-  MODIFY `order_detail_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -337,25 +398,25 @@ ALTER TABLE `product`
 -- AUTO_INCREMENT for table `product_image`
 --
 ALTER TABLE `product_image`
-  MODIFY `product_image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `product_image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `review`
 --
 ALTER TABLE `review`
-  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `review_image`
 --
 ALTER TABLE `review_image`
-  MODIFY `review_image_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `review_image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
