@@ -24,7 +24,7 @@ function sendEmail($toEmail, $toName, $subject, $body)
         $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
         //Recipients
-        $mail->setFrom('datndhe172134@fpt.edu.vn', 'HOHA PHONE');
+        $mail->setFrom('datndhe172134@fpt.edu.vn', 'Fruitables');
         $mail->addAddress($toEmail, $toName);     //Add a recipient
         // $mail->addAddress('ellen@example.com');               //Name is optional
         // $mail->addReplyTo('info@example.com', 'Information');
@@ -97,7 +97,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'signUp') {
     $toName = $username;
     $subject = 'Xac Thuc Tai Khoan';
 
-    $body = '<h1>Chào mừng ' . $username . ' đến với HOHAPHONE</h1>
+    $body = '<h1>Chào mừng ' . $username . ' đến với Fruitables</h1>
     <h1>Đây là mã xác thực của bạn vui lòng không kia sẻ cho ai: <br>
     <span style="font-style: italic;">' . $token . '</span>
     </h1>';
@@ -127,7 +127,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'refreshToken') {
     $toName = $username;
     $subject = 'Xac Thuc Tai Khoan';
 
-    $body = '<h1>Chào mừng ' . $username . ' đến với HOHAPHONE</h1>
+    $body = '<h1>Chào mừng ' . $username . ' đến với Fruitables</h1>
     <h1>Đây là mã xác thực của bạn vui lòng không kia sẻ cho ai: <br>
     <span style="font-style: italic;">' . $token . '</span>
     </h1>';
@@ -212,9 +212,9 @@ if (isset($_POST['action']) && $_POST['action'] == 'checkout') {
     $dataCart1 = Query($sqlCart1, $connection);
 
     foreach ($dataCart1 as $row) {
-        $product_color_id = $row['product_color_id'];
+        $product_id = $row['product_id'];
         $quantity = $row['quantity'];
-        $sqlProductColor = "SELECT * FROM product_color WHERE product_color_id = '$product_color_id'";
+        $sqlProductColor = "SELECT * FROM product WHERE product_id = '$product_id'";
         $dataProduct = Query($sqlProductColor, $connection);
         $row1 = $dataProduct[0];
         $inventory = $row1['quantity'];
@@ -238,23 +238,23 @@ if (isset($_POST['action']) && $_POST['action'] == 'checkout') {
     }
     $sqlCart = "SELECT * FROM cart WHERE user_id = '$user_id'";
     $dataCart = Query($sqlCart, $connection);
-    
+
 
     foreach ($dataCart as $row) {
-        $product_color_id = $row['product_color_id'];
+        $product_color_id = $row['product_id'];
         $quantity = $row['quantity'];
-        $sqlProductColor = "SELECT * FROM product_color WHERE product_color_id = '$product_color_id'";
+        $sqlProductColor = "SELECT * FROM product WHERE product_id = '$product_id'";
         $dataProduct = Query($sqlProductColor, $connection);
         $price = 0;
         foreach ($dataProduct as $row) {
             $price = $row['price'];
             $quantityChange =  $row['quantity'] - $quantity;
             $quantitySold=  $row['sold_quantity'] + $quantity;
-            $update = " UPDATE product_color SET quantity = '$quantityChange', sold_quantity = '$quantitySold' WHERE product_color_id = '$product_color_id'";
+            $update = " UPDATE product SET quantity = '$quantityChange', sold_quantity = '$quantitySold' WHERE product_id = '$product_id'";
             $dataUpdate = Query($update, $connection);
         }
 
-        $updateOrderDetail = "INSERT INTO `order_detail` ( `order_id`, `product_color_id`, `quantity`,`price`) VALUES ('$orderId','$product_color_id','$quantity','$price')";
+        $updateOrderDetail = "INSERT INTO `order_detail` ( `order_id`, `product_id`, `quantity`,`price`) VALUES ('$orderId','$product_color_id','$quantity','$price')";
         $dataOrderDetail = Query($updateOrderDetail, $connection);
 
         $deleteCart = "DELETE FROM cart WHERE user_id = '$user_id'";
@@ -272,7 +272,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'checkout') {
     $subject = 'Don hang #' . $orderId . ' da duoc dat thanh cong vao luc ' . $create_at;
 
     $body = '
-    <h3>Thông tin nười hàng: </h3> 
+    <h3>Thông tin người đặt hàng: </h3> 
     <p> Tên người đặt: ' . $name . '</p> 
     <p> Số điện thoại: ' . $phone . '</p> 
     <p> Địa chỉ: ' . $address . '</p>
@@ -307,8 +307,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') {
     $dataDetail = Query($sqlDetail, $connection);
     foreach ($dataDetail as $row) {
         $quantityOrder = $row['quantity'];
-        $color_id = $row['product_color_id'];
-        $sqlProduct = "SELECT * FROM `product_color` WHERE `product_color_id` = $color_id;";
+        $color_id = $row['product_id'];
+        $sqlProduct = "SELECT * FROM `product` WHERE `product_id` = $color_id;";
         $dataProduct = Query($sqlProduct, $connection);
         foreach ($dataProduct as $row1) {
             $quantity = $row1['quantity'];
@@ -316,7 +316,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') {
         }
         $newQuantity = $quantity + $quantityOrder;
         $newSoldQuantity = $soldQuantity - $quantityOrder;
-        $sqlUpdate = "UPDATE `product_color` SET `quantity` = $newQuantity, `sold_quantity` = '$newSoldQuantity' WHERE `product_color_id` = $color_id";
+        $sqlUpdate = "UPDATE `product` SET `quantity` = $newQuantity, `sold_quantity` = '$newSoldQuantity' WHERE `product_id` = $color_id";
         $dataUpdate = Query($sqlUpdate, $connection);
     }
     $sql = "UPDATE `order` SET `status` = 'canceled' WHERE `order_id` = $order_id;";
@@ -338,7 +338,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') {
     $currentDateTime = date('Y-m-d H:i:s');
     $subject = 'Don hang #' . $order_id . ' da duoc huy vao luc ' . $currentDateTime;
     $body = '
-        <h3>Thông tin người hàng: </h3> 
+        <h3>Thông tin người đặt hàng: </h3> 
         <p> Tên người đặt: ' . $name . '</p> 
         <p> Số điện thoại: ' . $phone . '</p> 
         <p> Địa chỉ: ' . $address . '</p>
@@ -358,10 +358,9 @@ if (isset($_POST['action']) && $_POST['action'] == 'updateStatus') {
     $order_id = $_POST['id'];
     $status = $_POST['status'];
     $sql = "";
-    if($status == "received"){
+    if ($status == "received") {
         $sql = "UPDATE `order` SET `status` = '$status', `payment_status` = 'paid' WHERE `order_id` = $order_id;";
-    }
-    else {
+    } else {
         $sql = "UPDATE `order` SET `status` = '$status',`payment_status` = 'not paid' WHERE `order_id` = $order_id;";
     }
     $data = Query($sql, $connection);
@@ -382,7 +381,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'updateStatus') {
         $currentDateTime = date('Y-m-d H:i:s');
         $subject = 'Don hang #' . $order_id . ' da nhan vao luc ' . $currentDateTime;
         $body = '
-        <h3>Thông tin người hàng: </h3> 
+        <h3>Thông tin người đặt hàng: </h3> 
         <p> Tên người đặt: ' . $name . '</p> 
         <p> Số điện thoại: ' . $phone . '</p> 
         <p> Địa chỉ: ' . $address . '</p>

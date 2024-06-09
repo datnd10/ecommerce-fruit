@@ -8,10 +8,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'checkout') {
 
 
     foreach ($dataCart as $row) {
-        $product_color_id = $row['product_color_id'];
+        $product_id = $row['product_id'];
         $quantity = $row['quantity'];
-        $sqlProductColor = "SELECT * FROM product_color WHERE product_color_id = '$product_color_id'";
-        $dataProduct = Query($sqlProductColor, $connection);
+        $sqlProduct = "SELECT * FROM product WHERE product_id = '$product_id'";
+        $dataProduct = Query($sqlProduct, $connection);
         $row1 = $dataProduct[0];
         $inventory = $row1['quantity'];
         if ($quantity > $inventory) {
@@ -29,8 +29,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'checkout') {
 
     $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     $vnp_Returnurl = "http://localhost:3000/components/user/checkout.php";
-    $vnp_TmnCode = "TNZ7KSOA"; //Mã website tại VNPAY 
-    $vnp_HashSecret = "IMJVBGWAFUWXELYAMKFYJLVZHFVKUUTD"; //Chuỗi bí mật
+    $vnp_TmnCode = "18HAZNOZ"; //Mã website tại VNPAY 
+    $vnp_HashSecret = "T92762J98CGPPU9XMRCJ5NRWBK2WOWCE"; //Chuỗi bí mật
 
     $vnp_TxnRef = $id; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
     // $vnp_TxnRef = $_POST['order_id']; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY

@@ -150,3 +150,43 @@ if (isset($_POST['action']) && $_POST['action'] == 'updateProduct') {
     // }
     echo "success";
 }
+
+if (isset($_GET['action']) && $_GET['action'] == 'getProductDetail') {
+    $id = $_GET['id'];
+    $sql = "SELECT 
+    p.product_id,
+    p.product_name,
+    p.description,
+    p.rate,
+    p.created_at,
+    p.updated_at,
+    p.is_active,
+    p.quantity,
+    p.price,
+    p.sold_quantity,
+    c.category_name,
+    ft.fruit_type_name,
+    ft.fruit_type_id
+FROM 
+    product p
+JOIN 
+    category c ON p.category_id = c.category_id
+JOIN 
+    fruit_type ft ON p.fruit_type_id = ft.fruit_type_id
+    WHERE p.product_id = '$id'; ";
+    $data = Query($sql, $connection);
+    $sql1 = "SELECT * FROM product_image WHERE product_id = '$id'; ";
+    $data1 = Query($sql1, $connection);
+    $fruitType = $data[0]['fruit_type_id'];
+    $sql2 = "SELECT p.product_id, p.product_name, p.description, p.rate, p.created_at, p.updated_at, p.is_active, p.quantity, p.price, p.sold_quantity, p.category_id, p.fruit_type_id, MIN(pi.image) 
+    AS product_image FROM product p LEFT JOIN product_image pi 
+    ON p.product_id = pi.product_id WHERE p.is_active = 1 AND p.fruit_type_id = '$fruitType' AND p.product_id != '$id' GROUP BY p.product_id;";
+    $data2 = Query($sql2, $connection);
+
+    $join = [
+        'product_details' => $data,
+        'product_images' => $data1,
+        'related_products' => $data2,
+    ];
+    echo json_encode($join);
+}

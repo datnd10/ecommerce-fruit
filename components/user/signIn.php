@@ -37,9 +37,11 @@
 
             background-color: #eee;
         }
-        .forgetPass{
+
+        .forgetPass {
             font-weight: bolder;
         }
+
         .forgetPass:hover {
             cursor: pointer;
         }
@@ -51,7 +53,7 @@
         <div class="container-fluid h-custom">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-md-12 col-lg-12 col-xl-12">
-                    <h2 class="text-center">Chào mừng bạn đến với HOHA Phone</h2>
+                    <h2 class="text-center">Chào mừng bạn đến với Fruitables</h2>
                     <a href="home.php" class="text-center">
                         <h3>Quay Lại Trang Chủ</h3>
                     </a>
@@ -131,32 +133,42 @@
     <script src="../../assets/js/todolist.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        function signIn() {
+            var checkbox = $("#remember-me")[0];
+            var data = new FormData();
+            data.append('email', $('#email').val());
+            data.append('password', $('#password').val());
+            data.append('action', "signIn");
+            $.ajax({
+                url: 'http://localhost:3000/database/controller/userController.php',
+                type: 'POST',
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response);
+                    switch (response) {
+                        case "success":
+                            window.location.href = 'home.php';
+                            break;
+                        default:
+                            $('#password').val('');
+                            $(".signInFail").removeClass('d-none').addClass('d-block');
+                            break;
+                    }
+                }
+            });
+        }
         $(document).ready(function() {
             $(".signInBtn").click(function() {
-                var checkbox = $("#remember-me")[0];
-                var data = new FormData();
-                data.append('email', $('#email').val());
-                data.append('password', $('#password').val());
-                data.append('action', "signIn");
-                $.ajax({
-                    url: 'http://localhost:3000/database/controller/userController.php',
-                    type: 'POST',
-                    data: data,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        console.log(response);
-                        switch (response) {
-                            case "success":
-                                window.location.href = 'home.php';
-                                break;
-                            default:
-                                $('#password').val('');
-                                $(".signInFail").removeClass('d-none').addClass('d-block');
-                                break;
-                        }
-                    }
-                });
+                signIn();
+            });
+
+            $("#password").keypress(function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    signIn();
+                }
             });
             $('.sendRequest').click(function() {
                 var data = new FormData();
@@ -170,7 +182,7 @@
                     processData: false,
                     success: function(response) {
                         console.log(response);
-                        switch(response){
+                        switch (response) {
                             case "success":
                                 $('#wrongEmail').addClass('d-none');
                                 Swal.fire({

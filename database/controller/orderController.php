@@ -43,34 +43,31 @@ if (isset($_GET['action']) && $_GET['action'] == 'userGetOrderDetail') {
             $sql = "SELECT * FROM `order` WHERE user_id = '$user_id' AND order_id = '$orderId'";
             $data = Query($sql, $connection);
 
-            if (empty($data)) {
+        if (empty($data)) {
                 echo "notPermission";
                 return;
             }
             $sqlDetail = "SELECT 
             od.quantity,
             p.product_name,
-            pc.color,
             od.price,
-            pc.product_color_id,
+            p.product_id,
             pi.image
         FROM 
             order_detail od
         JOIN 
-            product_color pc ON od.product_color_id = pc.product_color_id
-        JOIN 
-            product p ON pc.product_id = p.product_id
+            product p ON od.product_id = p.product_id
         LEFT JOIN (
             SELECT 
-                pc.product_color_id,
+                p.product_id,
                 MIN(pi.image) AS image
             FROM 
-                product_color pc
+                product p
             JOIN 
-                product_image pi ON pc.product_color_id = pi.product_color_id
+                product_image pi ON p.product_id = pi.product_id
             GROUP BY 
-                pc.product_color_id
-        ) AS pi ON pc.product_color_id = pi.product_color_id
+                p.product_id
+        ) AS pi ON p.product_id = pi.product_id
         WHERE
             od.order_id = $orderId;";
             $dataDetail = Query($sqlDetail, $connection);

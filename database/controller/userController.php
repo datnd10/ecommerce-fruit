@@ -190,8 +190,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'changeInformation') {
     $id = $_POST['id'];
     $email = $_POST['email'];
     $phone  = $_POST['phone'];
-    $username = $_POST['username'];
-    $fullname = $_POST['fullname'];
+    $username = $_POST['userName'];
+    $fullname = $_POST['fullName'];
     $address = $_POST['address'];
     $avatar = $_POST['oldImage'];
 
