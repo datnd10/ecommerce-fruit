@@ -85,7 +85,7 @@
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="page-header">
-                        <h2 class="page-title h2"> Quản Lý Sản Phẩm 2</h2>
+                        <h2 class="page-title h2"> Quản Lý Sản Phẩm</h2>
                     </div>
                     <div class="row">
                         <div class="col grid-margin stretch-card">

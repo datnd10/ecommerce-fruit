@@ -1,14 +1,12 @@
 <?php
 include '../config.php';
 if (isset($_GET['action']) && $_GET['action'] == 'view') {
-    // $sql = "SELECT c.category_id, c.category_name, c.is_active, c.created_at, SUM(pc.sold_quantity) AS total_sold_quantity,
-    // COUNT(pc.product_color_id) AS total_product_colors,
-    // SUM(pc.sold_quantity * pc.price) AS total_revenue
-    // FROM category AS c
-    // LEFT JOIN product AS p ON c.category_id = p.category_id
-    // LEFT JOIN product_color AS pc ON p.product_id = pc.product_id
-    // GROUP BY c.category_id, c.category_name";
-    $sql = "SELECT * FROM fruit_type";
+    $sql = "SELECT f.fruit_type_id, f.fruit_type_name, f.is_active, f.created_at, SUM(p.sold_quantity) AS total_sold_quantity,
+    COUNT(p.product_id) AS total_product,
+    SUM(p.sold_quantity * p.price) AS total_revenue
+    FROM fruit_type AS f
+    LEFT JOIN product AS p ON f.fruit_type_id = p.fruit_type_id
+    GROUP BY f.fruit_type_id, f.fruit_type_name";
     $data = Query($sql, $connection);
     $output = '';
     if (empty($data)) {

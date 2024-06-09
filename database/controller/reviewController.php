@@ -4,24 +4,22 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProductById') {
     $id = $_GET['id'];
     $sql = "SELECT 
     p.product_name,
-    pc.product_color_id,
-    pc.color,
-    pc.price,
+    p.product_id,
+    p.price,
     pi.image
     FROM 
     product p
-    JOIN 
-    product_color pc ON p.product_id = pc.product_id LEFT JOIN (
+    LEFT JOIN (
             SELECT 
-                pc.product_color_id,
+                p.product_id,
                 MIN(pi.image) AS image
             FROM 
-                product_color pc
+                product p
             JOIN 
-                product_image pi ON pc.product_color_id = pi.product_color_id
+                product_image pi ON p.product_id = pi.product_id
             GROUP BY 
-                pc.product_color_id
-        ) AS pi ON pc.product_color_id = pi.product_color_id where pc.product_color_id = '$id'; ";
+                p.product_id
+        ) AS pi ON p.product_id = pi.product_id where p.product_id = '$id'; ";
     $data = Query($sql, $connection);
     echo json_encode($data);
 }
@@ -34,19 +32,15 @@ if (isset($_POST['action']) && $_POST['action'] == 'addReview') {
     $userData = json_decode($_SESSION['account'], true);
     $user_id = $userData[0]['user_id'];
 
-    $sql2 = "INSERT INTO `review` ( `content`, `star`, `user_id`,  `product_color_id`) VALUES ('$description','$rate', '$user_id','$id')";
+    $sql2 = "INSERT INTO `review` ( `content`, `star`, `user_id`,  `product_id`) VALUES ('$description','$rate', '$user_id','$id')";
     $data = Query($sql2, $connection);
     $sql3 = "UPDATE product p
     SET p.rate = CEIL((
         SELECT AVG(r.star)
         FROM review r
-        WHERE r.product_color_id = $id
+        WHERE r.product_id = $id
     ))
-    WHERE p.product_id = (
-        SELECT pc.product_id
-        FROM product_color pc
-        WHERE pc.product_color_id = $id
-    );";
+    WHERE p.product_id = $id;";
     $data = Query($sql3, $connection);
     $sql3 = "SELECT review_id FROM `review` ORDER BY review_id DESC LIMIT 1;";
     $rs = Query($sql3, $connection);
@@ -83,7 +77,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'getReview') {
     u.user_id,
     u.username,
     u.avatar,
-    pc.color,
     r.content,
     r.review_id,
     r.star, r.created_at, r.review_id
@@ -92,9 +85,10 @@ FROM
 JOIN
     user u ON r.user_id = u.user_id
 JOIN
-    product_color pc ON r.product_color_id = pc.product_color_id
+    product p ON r.product_id = p.product_id
 WHERE
-    pc.product_id = $id;";
+    p.product_id = $id;";
+
     $data = Query($sql, $connection);
     $images = [];
     $reviews = [];
@@ -111,7 +105,6 @@ WHERE
             'user_id' => $row['user_id'],
             'review_id' => $row['review_id'],
             'username' => $row['username'],
-            'color' => $row['color'],
             'content' => $row['content'],
             'avatar' => $row['avatar'],
             'star' => $row['star'],

@@ -33,7 +33,15 @@ session_start();
 if (!isset($_SESSION['account'])) {
     header("Location: signIn.php");
     exit;
-} ?>
+} else {
+    $account = $_SESSION['account'];
+    $data = json_decode($account, true);
+    $role = $data[0]['role'];
+    if ($role != 1) {
+        header("Location: signIn.php");
+        exit;
+    }
+}  ?>
 
 <body>
     <?php include '../../partials/header.php' ?>

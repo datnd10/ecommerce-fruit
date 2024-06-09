@@ -169,7 +169,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'signIn') {
         //     setcookie('email', '', time() - 3600);
         //     setcookie('remember', '', time() - 3600);
         // }
-        echo "success";
+        echo json_encode($data);
     } else {
         echo "error";
     }

@@ -163,7 +163,7 @@
                                                     <span>${item.total_sold_quantity ? item.total_sold_quantity : 0}</span>
                                                 </td>
                                                 <td>
-                                                    <span>${item.total_product_colors}</span>
+                                                    <span>${item.total_product}</span>
                                                 </td>
                                                 <td>
                                                     <span>${formatVietnameseCurrency(money)}</span>

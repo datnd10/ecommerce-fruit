@@ -35,9 +35,9 @@
       </a>
       <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="manageCategory.php">Quản Lý Nhãn Hàng</a></li>
-          <li class="nav-item"> <a class="nav-link" href="manageProduct.php">Quản Lý Mặt Hàng</a></li>
+          <li class="nav-item"> <a class="nav-link" href="manageCategory.php">Quản Lý Loại Quả</a></li>
           <li class="nav-item"> <a class="nav-link" href="manageFruitType.php">Quản Lý Loại Mặt Hàng</a></li>
+          <li class="nav-item"> <a class="nav-link" href="manageProduct.php">Quản Lý Mặt Hàng</a></li>
         </ul>
       </div>
     </li>
@@ -74,5 +74,4 @@
       })
     }
   }
-
 </script>

@@ -26,6 +26,118 @@
 
     <!-- Template Stylesheet -->
     <link href="../../assets/css/homeStyle.css" rel="stylesheet">
+
+    <style>
+        .card-stepper {
+            z-index: 0
+        }
+
+        #progressbar-2 {
+            color: #455A64;
+        }
+
+        #progressbar-2 li {
+            list-style-type: none;
+            font-size: 13px;
+            width: 33.33%;
+            float: left;
+            position: relative;
+        }
+
+        #progressbar-2 #step1:before {
+            content: '\f058';
+            font-family: "Font Awesome 5 Free";
+            color: #fff;
+            width: 37px;
+            margin-left: 0px;
+            padding-left: 0px;
+        }
+
+        #progressbar-2 #step2:before {
+            content: '\f058';
+            font-family: "Font Awesome 5 Free";
+            color: #fff;
+            width: 37px;
+        }
+
+        #progressbar-2 #step3:before {
+            content: '\f058';
+            font-family: "Font Awesome 5 Free";
+            color: #fff;
+            width: 37px;
+            margin-right: 0;
+            text-align: center;
+        }
+
+        #progressbar-2 #step4:before {
+            content: '\f111';
+            font-family: "Font Awesome 5 Free";
+            color: #fff;
+            width: 37px;
+            margin-right: 0;
+            text-align: center;
+        }
+
+        #progressbar-2 li:before {
+            line-height: 37px;
+            display: block;
+            font-size: 12px;
+            background: #c5cae9;
+            border-radius: 50%;
+        }
+
+        #progressbar-2 li:after {
+            content: '';
+            width: 100%;
+            height: 10px;
+            background: #c5cae9;
+            position: absolute;
+            left: 0%;
+            right: 0%;
+            top: 15px;
+            z-index: -1;
+        }
+
+        #progressbar-2 li:nth-child(1):after {
+            left: 1%;
+            width: 100%
+        }
+
+        #progressbar-2 li:nth-child(2):after {
+            left: 1%;
+            width: 100%;
+        }
+
+        #progressbar-2 li:nth-child(3):after {
+            left: 1%;
+            width: 100%;
+            /* background: #c5cae9 !important; */
+        }
+
+        #progressbar-2 li:nth-child(4) {
+            left: 0;
+            width: 37px;
+        }
+
+        #progressbar-2 li:nth-child(4):after {
+            left: 0;
+            width: 0;
+        }
+
+        #progressbar-2 li.active:before,
+        #progressbar-2 li.active:after {
+            background: #6520ff;
+        }
+
+        .orange {
+            color: #ffb524;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+
 </head>
 <?php
 // Start the session
@@ -33,7 +145,17 @@ session_start();
 if (!isset($_SESSION['account'])) {
     header("Location: signIn.php");
     exit;
-} ?>
+}
+else {
+    $account = $_SESSION['account'];
+    $data = json_decode($account, true);
+    $role = $data[0]['role'];
+    if ($role != 1) {
+        header("Location: signIn.php");
+        exit;
+    }
+} 
+?>
 
 <body>
     <?php include '../../partials/header.php' ?>
@@ -46,6 +168,56 @@ if (!isset($_SESSION['account'])) {
                 <h1 class="mb-4 time"></h1>
             </div>
             <form action="#">
+                <div class="py-3 h-100">
+                    <div class="row d-flex justify-content-center align-items-center h-100">
+                        <div class="col-12">
+                            <div class="card card-stepper" style="border-radius: 16px;">
+                                <div class="card-body p-5 tracking">
+                                    <ul id="progressbar-2" class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
+                                        <li class="step0 text-center" id="step1"></li>
+                                        <li class="step0 text-center" id="step2"></li>
+                                        <li class="step0 text-center" id="step3"></li>
+                                        <li class="step0 text-muted text-end" id="step4"></li>
+                                    </ul>
+
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-lg-flex align-items-center">
+                                            <i class="fas fa-clipboard-list fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                                            <div>
+                                                <p class="fw-bold mb-1">Đang</p>
+                                                <p class="fw-bold mb-0">Xử Lý</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-lg-flex align-items-center">
+                                            <i class="fas fa-box-open fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                                            <div>
+                                                <p class="fw-bold mb-1">Đang</p>
+                                                <p class="fw-bold mb-0">Chuẩn Bị Hàng</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-lg-flex align-items-center">
+                                            <i class="fas fa-shipping-fast fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                                            <div>
+                                                <p class="fw-bold mb-1">Đang</p>
+                                                <p class="fw-bold mb-0">Ship</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-lg-flex align-items-center">
+                                            <i class="fas fa-home fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                                            <div>
+                                                <p class="fw-bold mb-1">Đã</p>
+                                                <p class="fw-bold mb-0">Nhận Hàng</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row g-5">
                     <div class="col-md-12 col-lg-6 col-xl-7">
                         <div class="row">
@@ -110,6 +282,64 @@ if (!isset($_SESSION['account'])) {
                     </div>
                 </div>
             </form>
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Đánh Giá Đơn Hàng</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="resetModal()"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="number" class="form-control productId" id="productId" name="productId" hidden="">
+                            <div class="form-group row">
+                                <div class="col-md-2 col-2">
+                                    <img class="img-fluid image" src="" style="width: 150px;height: 150px; object-fit: cover;" />
+                                </div>
+                                <div class="col-sm-6 col-6 text-left">
+                                    <div class="col-12"><span>Tên Sản Phẩm: </span><span class="productName"></span></div>
+                                    <div class="col-12"><span>Giá: </span><span class="price"></span></div>
+                                </div>
+                            </div>
+                            <form action="#">
+                                <div class="row g-2">
+                                    <div class="col-lg-12">
+                                        <div class="d-flex justify-content-between pt-3">
+                                            <div class="d-flex align-items-center">
+                                                <p class="mb-0 me-3">Số sao:</p>
+                                                <div class="d-flex align-items-center" style="font-size: 12px;">
+                                                    <i class="fa fa-star" style="font-size: 15px;"></i>
+                                                    <i class="fa fa-star" style="font-size: 15px;"></i>
+                                                    <i class="fa fa-star" style="font-size: 15px;"></i>
+                                                    <i class="fa fa-star" style="font-size: 15px;"></i>
+                                                    <i class="fa fa-star" style="font-size: 15px;"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label class="form-label my-3">Nội dung đánh giá: <sup class="text-center text-danger">*</sup></label>
+                                        <textarea name="" id="description" class="form-control" cols="30" rows="4" placeholder="" spellcheck="false"></textarea>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="d-flex align-items-center mb-4">
+                                            <input type="file" id="file-input" accept="image/png, image/jpeg" onchange="preview()" multiple>
+                                            <label for="file-input" class="desc d-flex gap-3 align-items-center">
+                                                <span class="p-1 border"><i class="mdi mdi-upload"></i> &nbsp; Chọn Ảnh</span>
+                                                <span id="num-of-files">No Files Chosen</span>
+                                            </label>
+                                        </div>
+                                        <div id="images" class="d-flex flex-wrap gap-3"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="resetModal()">Đóng</button>
+                            <button type="button" class="btn btn-primary updateBtn">Lưu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- Checkout Page End -->
@@ -144,38 +374,43 @@ if (!isset($_SESSION['account'])) {
         const sessionValue = <?php echo json_encode($_SESSION['account']); ?>;
         const decodedSessionValue = JSON.parse(sessionValue)[0];
 
-        const steps = $('.step');
-
-        function activateStep(stepIndex) {
-            steps.each(function(index) {
-                const currentStep = $(`.step-${index + 1}`);
-                if (currentStep.length) {
-                    const isCurrent = index <= stepIndex;
-                    currentStep.find('.icon').css('color', isCurrent ? 'rgb(45, 194, 88)' : '');
-                    currentStep.find('.text').css('color', isCurrent ? 'rgb(45, 194, 88)' : '');
-                }
-
+        $(document).ready(function() {
+            $('.fa-star').on('click', function() {
+                var index = $(this).index();
+                $('.fa-star').removeClass('orange');
+                $('.fa-star').slice(0, index + 1).addClass('orange');
             });
-            switch (stepIndex) {
-                case 0:
-                    $('#status').val('pending');
+        });
+
+        function updateProgressBar(status) {
+            // Remove 'active' class from all steps
+            $('#progressbar-2 li').removeClass('active');
+
+            switch (status) {
+                case 'pending':
+                    $('#step1').addClass('active');
                     break;
-                case 1:
-                    $('#status').val('approved');
+                case 'approved':
+                    $('#step1').addClass('active');
+                    $('#step2').addClass('active');
                     break;
-                case 2:
-                    $('#status').val('shipping');
+                case 'shipping':
+                    $('#step1').addClass('active');
+                    $('#step2').addClass('active');
+                    $('#step3').addClass('active');
                     break;
-                case 3:
-                    $('#status').val('received');
+                case 'received' || 'reviewed':
+                    $('#step1').addClass('active');
+                    $('#step2').addClass('active');
+                    $('#step3').addClass('active');
+                    $('#step4').addClass('active');
+                    break;
+                case 'canceled':
+                    $('.tracking').html('<h3 class="text-center text-danger">Đơn hàng đã bị huỷ</h3>');
                     break;
                 default:
-                    $('#status').val('Trạng thái không xác định');
+                    console.log('Unknown status:', status);
             }
-            const linebars = $('.linebar');
-            linebars.each(function(index) {
-                $(this).toggleClass('active', index <= stepIndex);
-            });
         }
 
         function formatVietnameseCurrency(amount) {
@@ -194,6 +429,7 @@ if (!isset($_SESSION['account'])) {
                 return "Số tiền không hợp lệ";
             }
         }
+
         const showOrderDetail = () => {
             $.ajax({
                 url: 'http://localhost:3000/database/controller/orderController.php',
@@ -215,21 +451,21 @@ if (!isset($_SESSION['account'])) {
                     $('#payment').val(data.information[0].payment_method);
 
 
-                    activateStep(data.information[0].status);
+                    updateProgressBar(data.information[0].status);
 
                     let totalPrice = 0;
-                    // if (data.information[0].status == 'received') {
-                    //     const tableHeaderRow = document.querySelector('thead tr');
-                    //     const newTh = document.createElement('th');
-                    //     newTh.className = 'sherah-table__column-6 sherah-table__h5';
-                    //     newTh.textContent = 'Đánh Giá';
-                    //     tableHeaderRow.appendChild(newTh);
-                    // }
+                    if (data.information[0].status == 'received') {
+                        const tableHeaderRow = document.querySelector('thead tr');
+                        const newTh = document.createElement('th');
+                        newTh.textContent = 'Đánh Giá';
+                        tableHeaderRow.appendChild(newTh);
+                    }
 
                     let html = '';
 
                     data.detail.forEach(function(item) {
                         console.log(item);
+
                         let total = item.quantity * item.price;
                         html += `<tr>
                                 <th scope="row">
@@ -240,8 +476,12 @@ if (!isset($_SESSION['account'])) {
                                 <td class="py-5">${item.product_name}</td>
                                 <td class="py-5">${item.price}</td>
                                 <td class="py-5">${item.quantity}</td>
-                                <td class="py-5">${formatVietnameseCurrency(total)}</td>
-                            </tr>`;
+                                <td class="py-5">${formatVietnameseCurrency(total)}</td>`;
+
+                        if (data.information[0].status == 'received') {
+                            html += `<td class="py-5" onclick="handleReview(${item.product_id})" data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor: pointer;"><i class="fas fa-pen fs-5 text-success"></i></td>`;
+                        }
+                        html += `</tr>`;
                     })
                     let subTotal = data.information[0].total_money - data.information[0].shipping;
                     let shipping = +data.information[0].shipping;
@@ -287,39 +527,111 @@ if (!isset($_SESSION['account'])) {
                         </tr>`;
 
                     $('.listItem').html(html);
-                    switch (data.information[0].status) {
-                        case 'pending':
-                            $(".head").removeClass("d-none");
-                            $(".head-2").addClass("d-none")
-                            activateStep(0);
-                            break;
-                        case 'approved':
-                            $(".head").removeClass("d-none");
-                            $(".head-2").addClass("d-none")
-                            activateStep(1);
-                            break;
-                        case 'shipping':
-                            $(".head").removeClass("d-none");
-                            $(".head-2").addClass("d-none")
-                            activateStep(2);
-                            break;
-                        case 'received':
-                            $(".head").removeClass("d-none");
-                            $(".head-2").addClass("d-none")
-                            activateStep(3);
-                            break;
-                        case 'canceled':
-                            $(".head").addClass("d-none")
-                            $(".head-2").removeClass("d-none")
-                            break;
-                        default:
-                            status = 'Trạng thái không xác định';
-                            break;
-                    }
+
                 }
             })
         }
         showOrderDetail();
+        const handleReview = (id) => {
+            $.ajax({
+                url: 'http://localhost:3000/database/controller/reviewController.php',
+                type: 'GET',
+                data: {
+                    action: "getProductById",
+                    id: id
+                },
+                success: (response) => {
+                    console.log(response);
+                    let data = JSON.parse(response)[0];
+                    $('#productId').val(data.product_id);
+                    $('.productName').html(data.product_name);
+                    $('.price').html(formatVietnameseCurrency(data.price));
+                    $(".image").attr("src", `../../database/uploads/${data.image}`);
+                }
+            })
+        }
+
+        function resetModal() {
+            $('#description').val(''); // Reset description
+            $('.fa-star').removeClass('orange'); // Remove orange class from stars
+            $('#file-input').val(''); // Reset file input
+            $('#num-of-files').text('No Files Chosen'); // Reset file input text
+            $('#images').empty(); // Remove all images
+        }
+
+        function preview(fileInput, imageContainer, numOfFiles) {
+            imageContainer.empty();
+            numOfFiles.text(`${fileInput[0].files.length} Files Selected`);
+
+            for (let file of fileInput[0].files) {
+                let reader = new FileReader();
+                let figure = $("<figure></figure>");
+                let figCap = $("<figcaption></figcaption>");
+
+                figCap.text(file.name);
+                figure.append(figCap);
+
+                reader.onload = () => {
+                    let img = $("<img>");
+                    img.attr("src", reader.result);
+                    figure.prepend(img);
+                }
+
+                imageContainer.append(figure);
+                reader.readAsDataURL(file);
+            }
+        }
+
+        let fileInput = $("#file-input");
+        let imageContainer = $("#images");
+        let numOfFiles = $("#num-of-files");
+
+        fileInput.on('change', () => {
+            preview(fileInput, imageContainer, numOfFiles);
+        });
+
+        $('.updateBtn').on('click', () => {
+            let listImages = $('#file-input')[0].files;
+            const data = new FormData();
+            data.append('id', $('#productId').val());
+            data.append('description', $('#description').val());
+            data.append('rate', $('.fa-star.orange').length);
+            for (let i = 0; i < listImages.length; i++) {
+                data.append('images[]', listImages[i]);
+            }
+            data.append('action', 'addReview'); 
+
+            $.ajax({
+                url: 'http://localhost:3000/database/controller/reviewController.php',
+                type: 'POST',
+                data: data,
+                contentType: false,
+                processData: false,
+                success: (response) => {
+                    console.log(response);
+                    switch (response) {
+                        case 'success':
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Cập Nhật Thành Công',
+                                confirmButtonText: 'OK',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.reload();
+                                }
+                            });
+                            break;
+                        default:
+                            Swal.fire({
+                                title: 'Có Gì Đó Sai Sót',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                            });
+                            break;
+                    }
+                }
+            });
+        });
     </script>
 </body>
 

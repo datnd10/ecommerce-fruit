@@ -154,6 +154,7 @@
                     } else {
                         $('.bodyTable').empty();
                         data.forEach(function(item) {
+                            console.log(item);
                             let money = item.total_revenue ? item.total_revenue : 0;
                             let html = `<tr>
                                                 <td>
@@ -163,7 +164,7 @@
                                                     <span>${item.total_sold_quantity ? item.total_sold_quantity : 0}</span>
                                                 </td>
                                                 <td>
-                                                    <span>${item.total_product_colors}</span>
+                                                    <span>${item.total_product}</span>
                                                 </td>
                                                 <td>
                                                     <span>${formatVietnameseCurrency(money)}</span>

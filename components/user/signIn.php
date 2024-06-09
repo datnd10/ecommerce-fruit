@@ -147,13 +147,20 @@
                 processData: false,
                 success: function(response) {
                     console.log(response);
-                    switch (response) {
-                        case "success":
+                    if (response == 'error') {
+                        $('#password').val('');
+                        $(".signInFail").removeClass('d-none').addClass('d-block');
+                        return;
+                    }
+                    let data = JSON.parse(response);
+                    let role = +data[0].role;
+                    console.log(role);
+                    switch (role) {
+                        case 1:
                             window.location.href = 'home.php';
                             break;
-                        default:
-                            $('#password').val('');
-                            $(".signInFail").removeClass('d-none').addClass('d-block');
+                        case 0:
+                            window.location.href = 'http://localhost:3000/components/admin/dashBoard.php';
                             break;
                     }
                 }
