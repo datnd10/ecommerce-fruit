@@ -335,7 +335,7 @@
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     $('.closeBtn').click();
-                                    showAllOrder();
+                                    location.reload(); 
                                 }
                             })
                             break;

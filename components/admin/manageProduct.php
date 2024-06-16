@@ -433,7 +433,7 @@
                         $('#images').empty();
                         images.forEach((image) => {
                             listImageOld.push(image.image);
-                            $('#images').append(`<figure><img src="../../database/uploads/${image.image}"><figcaption>${image.image}</figcaption></figure>`);
+                            $('#images').append(`<figure><img src="../../database/uploads/${image.image}"></figure>`);
                         });
                         numOfFiles.empty();
                         numOfFiles.append(`${images.length} files chosen`);

@@ -26,6 +26,12 @@
 
     <!-- Template Stylesheet -->
     <link href="../../assets/css/homeStyle.css" rel="stylesheet">
+
+    <style>
+        input[type="file"] {
+            display: none;
+        }
+    </style>
 </head>
 <?php
 // Start the session
@@ -40,6 +46,7 @@ if (isset($_SESSION['account'])) {
     }
 }
 ?>
+
 <body>
     <?php include '../../partials/header.php' ?>
 
@@ -48,8 +55,9 @@ if (isset($_SESSION['account'])) {
         <div class="container py-5">
             <div class="row g-5 align-items-center">
                 <div class="col-md-12 col-lg-7">
-                    <h4 class="mb-3 text-secondary">100% Organic Foods</h4>
-                    <h1 class="mb-5 display-3 text-primary">Organic Veggies & Fruits Foods</h1>
+                    <h4 class="mb-3 text-secondary">100% Hoa Quả Sạch</h4>
+                    <h1 class="mb-5 display-3 text-primary">Rau Củ Quả & Thực phẩm Hữu Cơ</h1>
+                    <button type="button" class="btn btn-success py-md-3 px-md-5 me-3" data-bs-toggle="modal" data-bs-target="#exampleModal">Nhận Diện Các Loại Quả</button>
                 </div>
                 <div class="col-md-12 col-lg-5">
                     <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
@@ -78,6 +86,40 @@ if (isset($_SESSION['account'])) {
     </div>
     <!-- Hero End -->
 
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Nhận Diện Loại Quả</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-item d-flex flex-column align-items-center">
+                        <div>
+                            <label for="avatar" class="form-label my-3 border border-2 p-2 text-center">Chọn ảnh để nhận dạng</label>
+                            <input type="file" class="form-control-file" accept="image/*" onchange="loadFile(event)" id="avatar" name="avatar">
+                        </div>
+                        <div>
+                            <img id="avatarDisplay" class="img-fluid" style="width: 350px; height: 300px; object-fit: cover;" />
+                        </div>
+
+                        <div class="text-center my-3 d-none text-primary" id="spinnerContainer">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+
+                        <h3 class="text-center my-3 d-none predicted text-success text-primary">
+                            Đây là quả táo
+                        </h3>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Featurs Section Start -->
     <div class="container-fluid featurs">
@@ -89,8 +131,8 @@ if (isset($_SESSION['account'])) {
                             <i class="fas fa-car-side fa-3x text-white"></i>
                         </div>
                         <div class="featurs-content text-center">
-                            <h5>Free Shipping</h5>
-                            <p class="mb-0">Free on order over $300</p>
+                            <h5>Miễn phí vận chuyển</h5>
+                            <p class="mb-0">Đơn hàng trên 500.000đ</p>
                         </div>
                     </div>
                 </div>
@@ -100,8 +142,8 @@ if (isset($_SESSION['account'])) {
                             <i class="fas fa-user-shield fa-3x text-white"></i>
                         </div>
                         <div class="featurs-content text-center">
-                            <h5>Security Payment</h5>
-                            <p class="mb-0">100% security payment</p>
+                            <h5>Bảo mật thanh toán</h5>
+                            <p class="mb-0">100% bảo mật thanh toán</p>
                         </div>
                     </div>
                 </div>
@@ -111,8 +153,8 @@ if (isset($_SESSION['account'])) {
                             <i class="fas fa-exchange-alt fa-3x text-white"></i>
                         </div>
                         <div class="featurs-content text-center">
-                            <h5>30 Day Return</h5>
-                            <p class="mb-0">30 day money guarantee</p>
+                            <h5>Trả lại hàng</h5>
+                            <p class="mb-0">Đổi hàng nếu không đúng ý</p>
                         </div>
                     </div>
                 </div>
@@ -122,8 +164,8 @@ if (isset($_SESSION['account'])) {
                             <i class="fa fa-phone-alt fa-3x text-white"></i>
                         </div>
                         <div class="featurs-content text-center">
-                            <h5>24/7 Support</h5>
-                            <p class="mb-0">Support every time fast</p>
+                            <h5>24/7 Hỗ trợ</h5>
+                            <p class="mb-0">Hỗ trợ mọi lúc</p>
                         </div>
                     </div>
                 </div>
@@ -189,13 +231,13 @@ if (isset($_SESSION['account'])) {
                                     </ul>
                                 </div>
                                 <div class="col-lg-12">
-                                    <button class="btn btn-primary w-100" type="button" id="reset">Reset</button>
+                                    <button class="btn btn-primary w-100" type="button" id="reset">Làm Mới</button>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="position-relative">
                                         <img src="../../assets/images/banner-fruits.jpg" class="img-fluid w-100 rounded" alt="">
                                         <div class="position-absolute" style="top: 50%; right: 10px; transform: translateY(-50%);">
-                                            <h3 class="text-secondary fw-bold">Fresh <br> Fruits <br> Banner</h3>
+                                            <h3 class="text-secondary fw-bold">Hoa <br> Quả <br> Tươi</h3>
                                         </div>
                                     </div>
                                 </div>
@@ -239,7 +281,105 @@ if (isset($_SESSION['account'])) {
 
     <!-- Template Javascript -->
     <script src="../../assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+        function formatVietnameseCurrency(amount) {
+            try {
+                // Đảm bảo amount là một số
+                amount = parseFloat(amount);
+
+                // Sử dụng hàm toLocaleString để định dạng số và thêm dấu phẩy
+                formattedAmount = amount.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                });
+
+                return formattedAmount;
+            } catch (error) {
+                return "Số tiền không hợp lệ";
+            }
+        }
+
+        const loadFile = function(event) {
+
+            $('.predicted').addClass('d-none');
+            $('#avatarDisplay')[0].src = URL.createObjectURL(event.target.files[0]);
+            $('#avatarDisplay')[0].onload = function() {
+                URL.revokeObjectURL($('#avatarDisplay')[0].src);
+            };
+            $('#spinnerContainer').removeClass('d-none');
+            uploadFile();
+        };
+
+        function uploadFile() {
+            const fileInput = document.getElementById('avatar');
+            console.log(1);
+            const file = fileInput.files[0];
+            console.log(file);
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onloadend = function() {
+                    const base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+
+                    axios({
+                            method: "POST",
+                            url: "https://detect.roboflow.com/fruit-detection-deqvb/1",
+                            params: {
+                                api_key: "H4KJwUEkPh8xVFdwOLjG"
+                            },
+                            data: base64String,
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            }
+                        })
+                        .then(function(response) {
+                            $('#spinnerContainer').addClass('d-none');
+                            const result = response.data.predictions[0].class;
+                            console.log(result);
+                            switch (result) {
+                                case 'WATERMELON':
+                                    $('.predicted').text('Đây là quả dưa hấu');
+                                    break;
+                                case 'APPLE':
+                                    $('.predicted').text('Đây là quả táo');
+                                    break;
+                                case 'ONIONS':
+                                    $('.predicted').text('Đây là quả củ hành');
+                                    break;
+                                case 'PINEAPLE':
+                                    $('.predicted').text('Đây là quả dứa');
+                                    break;
+                                case 'TOMATO':
+                                    $('.predicted').text('Đây là quả cà chua');
+                                    break;
+                                default:
+                                    $('.predicted').text('Không xác định');
+                                    break;
+                            }
+
+                            $('.predicted').removeClass('d-none');
+                            console.log(response.data);
+                        })
+                        .catch(function(error) {
+                            console.log(error.message);
+                        });
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                console.log("No file selected");
+            }
+        }
+
+        document.getElementById('exampleModal').addEventListener('hidden.bs.modal', function() {
+            document.getElementById('avatar').value = '';
+            document.getElementById('avatarDisplay').src = '';
+            document.getElementById('spinnerContainer').classList.add('d-none');
+            document.querySelector('.predicted').classList.add('d-none');
+        });
+
+
         $(document).ready(function() {
             const getAllCategories = () => {
                 $.ajax({
@@ -345,13 +485,12 @@ if (isset($_SESSION['account'])) {
                                 <a href=detailProduct.php?id=${item.product_id}>
                                     <div class="rounded position-relative fruite-item">
                                         <div class="fruite-img">
-                                            <img src="../../database/uploads/${item.product_image}" class="img-fluid w-100 rounded-top" alt="" style="min-height: 200px">
+                                            <img src="../../database/uploads/${item.product_image}" class="img-fluid w-100 rounded-top" alt="" style="width: 260px; height: 260px; object-fit: cover">
                                         </div>
                                         <div class="p-4 border border-secondary border-top-0 rounded-bottom">
                                             <h4>${item.product_name}</h4>
                                             <div class="d-flex align-items-center justify-content-between flex-lg-wrap">
-                                                <p class="text-dark fs-5 fw-bold mb-0">$${item.price} / kg</p>
-                                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                <p class="text-dark fs-5 fw-bold mb-0">${formatVietnameseCurrency(item.price)} / kg</p>
                                             </div>
                                         </div>
                                     </div>

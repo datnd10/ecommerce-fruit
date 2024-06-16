@@ -131,9 +131,9 @@ if (!isset($_SESSION['account'])) {
                 },
                 success: (response) => {
                     let data = JSON.parse(response);
+                    console.log(data);
                     $('.bodyTable').empty();
                     data.forEach(function(item) {
-
                         let status = "";
                         switch (item.status) {
                             case 'pending':

@@ -86,7 +86,7 @@ if (!isset($_SESSION['account'])) {
                                         Chỉnh sửa
                                     </span>
                                 </label>
-                                <input type="text" class="form-control" placeholder="Địa Chỉ Nhận Hàng" name="address" required id="address">
+                                <input type="text" disabled class="form-control" name="address" required id="address">
                             </div>
                         </div>
                         <div class="row">
@@ -244,6 +244,8 @@ if (!isset($_SESSION['account'])) {
             $('#address').val(newAddress);
         });
         const loadFile = function(event) {
+
+            console.log(event.target.files[0].name);
             $('#avatarDisplay')[0].src = URL.createObjectURL(event.target.files[0]);
             $('#avatarDisplay')[0].onload = function() {
                 URL.revokeObjectURL($('#avatarDisplay')[0].src);

@@ -48,10 +48,10 @@
                                 <div class="sherah-table__head sherah-table__main">
                                     <h4 class="sherah-order-title orderId"></h4>
                                     <div class="sherah-order-right">
-                                        <p class="sherah-order-text time"></p>
+                                        <p class="sherah-order-text time mt-3"></p>
                                         <div class="sherah-table-status">
-                                            <div class="sherah-table__status sherah-color2 sherah-color2__bg--opactity">Paid</div>
-                                            <div class="sherah-table__status sherah-color3 sherah-color3__bg--opactity">Partially Fulfilled</div>
+                                            <div class="sherah-table__status sherah-color2 sherah-color2__bg--opactity paymentStatus">Paid</div>
+                                            <div class="sherah-table__status sherah-color3 sherah-color3__bg--opactity paymentMethod">Partially Fulfilled</div>
                                         </div>
                                     </div>
                                 </div>
@@ -179,6 +179,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const orderId = urlParams.get('id');
         const steps = $('.step');
+
         function activateStep(stepIndex) {
             steps.each(function(index) {
                 const currentStep = $(`.step-${index + 1}`);
@@ -194,7 +195,7 @@
                 $(this).toggleClass('active', index <= stepIndex);
             });
         }
-        
+
         function formatVietnameseCurrency(amount) {
             try {
                 // Đảm bảo amount là một số
@@ -224,16 +225,13 @@
                     console.log(response);
                     let data = JSON.parse(response);
                     console.log(data);
-                    if (data == "No data found") {
-                        data = "<h2 style=\"font-style: italic;\">Không có dữ liệu</h2>";
-                        $('.dataTable').html(data);
-                    } else {
-                        $('.bodyTable').empty();
-                        let totalPrice = 0;
-                        data.detail.forEach(function(item) {
-                            let price = item.price ? item.price : 0;
-                            let total = item.quantity * item.price;
-                            let html = `<tr>
+                    $('.bodyTable').empty();
+                    let totalPrice = 0;
+
+                    data.detail.forEach(function(item) {
+                        let price = item.price ? item.price : 0;
+                        let total = item.quantity * item.price;
+                        let html = `<tr>
                                         <td class="sherah-table__column-1 sherah-table__data-1">
                                             <div class="sherah-table__product--thumb">
                                                 <img src="../../database/uploads/${item.image}" style = "height: auto; max-width: 100%;">
@@ -243,7 +241,6 @@
                                             
                                             <div class="sherah-table__product-name">
                                                 <h4 class="sherah-table__product-name--title">${item.product_name}</h4>
-                                                <p class="sherah-table__product-name--text">Màu: <span> ${item.color}</span></p>
                                             </div>
                                         </td>
                                         <td class="sherah-table__column-1 sherah-table__data-3">
@@ -262,48 +259,54 @@
                                             </div>
                                         </td>
                                     </tr>`
-                            totalPrice += +item.quantity * +item.price;
-                            $('.bodyTable').append(html);
-                        })
-                        $('.totalPrice').html(formatVietnameseCurrency(totalPrice));
-                        $('.shipvalue').html(formatVietnameseCurrency(data.information[0].shipping));
-                        $('.totalPriceAndShip').html(formatVietnameseCurrency(data.information[0].total_money));
-                        $('.customerName').html(data.information[0].name);
-                        $('.phone').html(data.information[0].phone);
-                        $('.gmail').html(data.information[0].email);
-                        $('.address').html(data.information[0].address);
-                        $(".avatar").attr("src", `../../database/uploads/${data.information[0].avatar}`);
-                        $('.orderId').html('Mã Đơn Hàng #' + orderId);
-                        $('.time').html(data.information[0].created_at);
-                        switch (data.information[0].status) {
-                            case 'pending':
-                                $(".head").removeClass("d-none");
-                                $(".head-2").addClass("d-none")
-                                activateStep(0);
-                                break;
-                            case 'approved':
-                                $(".head").removeClass("d-none");
-                                $(".head-2").addClass("d-none")
-                                activateStep(1);
-                                break;
-                            case 'shipping':
-                                $(".head").removeClass("d-none");
-                                $(".head-2").addClass("d-none")
-                                activateStep(2);
-                                break;
-                            case 'received':
-                                $(".head").removeClass("d-none");
-                                $(".head-2").addClass("d-none")
-                                activateStep(3);
-                                break;
-                            case 'canceled':
-                                $(".head").addClass("d-none")
-                                $(".head-2").removeClass("d-none")
-                                break;
-                            default:
-                                status = 'Trạng thái không xác định';
-                                break;
-                        }
+                        totalPrice += +item.quantity * +item.price;
+                        $('.bodyTable').append(html);
+                    })
+                    $('.totalPrice').html(formatVietnameseCurrency(totalPrice));
+                    $('.shipvalue').html(formatVietnameseCurrency(data.information[0].shipping));
+                    $('.totalPriceAndShip').html(formatVietnameseCurrency(data.information[0].total_money));
+                    $('.customerName').html(data.information[0].name);
+                    $('.phone').html(data.information[0].phone);
+                    $('.gmail').html(data.information[0].email);
+                    $('.address').html(data.information[0].address);
+                    $(".avatar").attr("src", `../../database/uploads/${data.information[0].avatar}`);
+                    $('.orderId').html('Mã Đơn Hàng #' + orderId);
+                    $('.time').html(data.information[0].created_at);
+                    $('.paymentMethod').html(data.information[0].payment_method == 'banking' ? 'Thanh toán qua ngân hàng' : 'Thanh toán khi nhân hàng');
+                    $('.paymentStatus').html(data.information[0].payment_status == 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán');
+
+
+
+
+
+                    switch (data.information[0].status) {
+                        case 'pending':
+                            $(".head").removeClass("d-none");
+                            $(".head-2").addClass("d-none")
+                            activateStep(0);
+                            break;
+                        case 'approved':
+                            $(".head").removeClass("d-none");
+                            $(".head-2").addClass("d-none")
+                            activateStep(1);
+                            break;
+                        case 'shipping':
+                            $(".head").removeClass("d-none");
+                            $(".head-2").addClass("d-none")
+                            activateStep(2);
+                            break;
+                        case 'received':
+                            $(".head").removeClass("d-none");
+                            $(".head-2").addClass("d-none")
+                            activateStep(3);
+                            break;
+                        case 'canceled':
+                            $(".head").addClass("d-none")
+                            $(".head-2").removeClass("d-none")
+                            break;
+                        default:
+                            status = 'Trạng thái không xác định';
+                            break;
                     }
                 }
             })

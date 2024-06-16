@@ -121,15 +121,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'getAllReview') {
     r.review_id AS review_id,
     c.category_name AS category_name,
     p.product_name AS product_name,
-    pc.color AS product_color,
+    ft.fruit_type_name AS fruit_type_name,
     u.username AS user_name,
     r.created_at AS review_date,
     r.star as rate
 FROM
     category c
     JOIN product p ON c.category_id = p.category_id
-    JOIN product_color pc ON p.product_id = pc.product_id
-    JOIN review r ON pc.product_color_id = r.product_color_id
+    JOIN review r ON p.product_id = r.product_id
+    JOIN fruit_type ft ON p.fruit_type_id = ft.fruit_type_id
     JOIN user u ON r.user_id = u.user_id;";
     $data = Query($sql, $connection);
     if (empty($data)) {
@@ -146,14 +146,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'viewComment') {
     r.star,
     r.content,
     p.product_name,
-    pc.color,
-    pc.price,
+    p.price,
     pi.image
 FROM
     product p
-    JOIN product_color pc ON p.product_id = pc.product_id
-    JOIN review r ON pc.product_color_id = r.product_color_id
-    JOIN product_image pi ON pc.product_color_id = pi.product_color_id
+    JOIN review r ON p.product_id = r.product_id
+    JOIN product_image pi ON p.product_id = pi.product_id
     where r.review_id = $id
 GROUP BY
     p.product_id";

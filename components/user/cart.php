@@ -46,9 +46,8 @@
 session_start();
 if (!isset($_SESSION['account'])) {
     header("Location: signIn.php");
-    exit; 
-}
- else {
+    exit;
+} else {
     $account = $_SESSION['account'];
     $data = json_decode($account, true);
     $role = $data[0]['role'];
@@ -68,12 +67,12 @@ if (!isset($_SESSION['account'])) {
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">Products</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Handle</th>
+                            <th scope="col">Sản Phẩm</th>
+                            <th scope="col">Tên</th>
+                            <th scope="col">Giá</th>
+                            <th scope="col">Số Lượng</th>
+                            <th scope="col">Tổng Tiền</th>
+                            <th scope="col">Hành Động</th>
                         </tr>
                     </thead>
                     <tbody class="cartTable">
@@ -86,9 +85,9 @@ if (!isset($_SESSION['account'])) {
                 <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
                     <div class="bg-light rounded">
                         <div class="p-4">
-                            <h2 class="display-12 mb-4">Cart <span class="fw-normal">Total:</span> <span class="totalCart">$99.00</span> </h2>
+                            <h2 class="display-12 mb-4">Tổng <span class="fw-normal">Tiền:</span> <span class="totalCart">$99.00</span> </h2>
                         </div>
-                        <button id="checkoutBtn" class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
+                        <button id="checkoutBtn" class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Thanh Toán</button>
                     </div>
                 </div>
             </div>
@@ -150,6 +149,35 @@ if (!isset($_SESSION['account'])) {
             });
         };
 
+        function formatVietnameseCurrency(amount) {
+            try {
+                // Đảm bảo amount là một số
+                amount = parseFloat(amount);
+
+                // Sử dụng hàm toLocaleString để định dạng số và thêm dấu phẩy
+                formattedAmount = amount.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                });
+
+                return formattedAmount;
+            } catch (error) {
+                return "Số tiền không hợp lệ";
+            }
+        }
+
+        function convertVietnameseCurrency(currencyString) {
+            // Xóa ký hiệu "₫" và khoảng trắng
+            let amountNoSymbol = currencyString.replace(" ₫", "");
+
+            // Xóa dấu chấm
+            let amountNoDots = amountNoSymbol.replace(/\./g, "");
+
+            // Chuyển đổi thành số nguyên
+            let amountAsNumber = parseInt(amountNoDots);
+
+            return amountAsNumber;
+        }
         const viewcart = function() {
             $.ajax({
                 url: 'http://localhost:3000/database/controller/cartController.php',
@@ -175,7 +203,7 @@ if (!isset($_SESSION['account'])) {
                                 <p class="mb-0 mt-4">${item.dataProduct[0].product_name}</p>
                             </td>
                             <td>
-                                <p class="mb-0 mt-4">${item.dataProduct[0].price} $</p>
+                                <p class="mb-0 mt-4">${formatVietnameseCurrency(item.dataProduct[0].price)}</p>
                             </td>
                             <td>
                                 <div class="input-group quantity mt-4" style="width: 100px;">
@@ -193,7 +221,7 @@ if (!isset($_SESSION['account'])) {
                                 </div>
                             </td>
                             <td>
-                                <p class="mb-0 mt-4 total-price">${total} $</p>
+                                <p class="mb-0 mt-4 total-price">${formatVietnameseCurrency(total)}</p>
                             </td>
                             <td>
                                 <button class="btn btn-md rounded-circle bg-light border mt-4" onclick="doDelete(${item.dataProduct[0].product_id})">
@@ -204,20 +232,23 @@ if (!isset($_SESSION['account'])) {
                     })
 
                     $('.cartTable').append(html);
-                    $('.totalCart').text(totalcart + ' $');
+                    $('.totalCart').text(formatVietnameseCurrency(totalcart));
 
                     function updateCartTotal() {
                         let totalcart = 0;
 
                         $('.cartTable tr').each(function() {
-                            let quantity = parseInt($(this).find('input').val(), 10);
-                            let price = parseFloat($(this).find('td:nth-child(3) p').text().replace(' $', ''));
+
+                            let price = convertVietnameseCurrency( $(this).find('td:nth-child(3) p').text());
+
+                            let quantity = Number($(this).find('input').val(), 10);
+
                             let total = quantity * price;
                             totalcart += total;
-                            $(this).find('.total-price').text(total + ' $');
+                            $(this).find('.total-price').text(formatVietnameseCurrency(total));
                         });
 
-                        $('.totalCart').text(totalcart + ' $');
+                        $('.totalCart').text(formatVietnameseCurrency(totalcart));
                     }
 
                     $('.btn-minus').on('click', function() {
@@ -229,8 +260,6 @@ if (!isset($_SESSION['account'])) {
                             quantityInput.val(currentValue - 1);
                             updateCartTotal(); //
                         }
-
-
                     });
 
                     $('.btn-plus').on('click', function() {

@@ -35,7 +35,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'checkout') {
     $vnp_TxnRef = $id; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
     // $vnp_TxnRef = $_POST['order_id']; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
 
-    $vnp_OrderInfo = 'Noi dung thanh toan';
+    $vnp_OrderInfo = $_POST['message'] ? $_POST['message'] : 'Thanh toan don hang';
     $vnp_OrderType = 'billpayment';
     // $vnp_Amount = $_POST['amount'] * 100;
     $vnp_Amount = $_POST['totalOrder'] * 100;

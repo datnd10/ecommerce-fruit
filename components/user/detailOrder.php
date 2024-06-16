@@ -242,9 +242,9 @@ else {
                         <div class="form-item">
                             <label for="shipping" class="form-label my-3 fw-bolder">Vận Chuyện <sup class="text-danger">*</sup></label>
                             <select id="shipping" class="form-select" name="shipping" disabled>
-                                <option value="1" class="20000">Chuyển phát thường (Nhận Hàng Sau 1 Tuần)</option>
-                                <option value="2" class="25000">Chuyển phát nhanh (Nhận Hàng Trong Khoảng 4 đến 6 ngày)</option>
-                                <option value="3" class="30000">Chuyển phát hỏa tốc (Nhận Hàng Trong Khoảng 1 đến 3 ngày)</option>
+                                <option value="30000" class="20000">Chuyển phát thường (Nhận Hàng Sau 1 Tuần)</option>
+                                <option value="40000" class="25000">Chuyển phát nhanh (Nhận Hàng Trong Khoảng 4 đến 6 ngày)</option>
+                                <option value="50000" class="30000">Chuyển phát hỏa tốc (Nhận Hàng Trong Khoảng 1 đến 3 ngày)</option>
                             </select>
                         </div>
 
@@ -258,7 +258,7 @@ else {
 
                         <div class="form-item">
                             <label for="text" class="form-label my-3 fw-bolder">Lời nhắn</label>
-                            <textarea name="text" id="message" disabled class="form-control" spellcheck="false" cols="30" rows="5" placeholder="Oreder Notes (Optional)"></textarea>
+                            <textarea name="text" id="message" disabled class="form-control" spellcheck="false" cols="30" rows="5"></textarea>
                         </div>
                     </div>
 
@@ -474,7 +474,7 @@ else {
                                     </div>
                                 </th>
                                 <td class="py-5">${item.product_name}</td>
-                                <td class="py-5">${item.price}</td>
+                                <td class="py-5">${formatVietnameseCurrency(item.price)}</td>
                                 <td class="py-5">${item.quantity}</td>
                                 <td class="py-5">${formatVietnameseCurrency(total)}</td>`;
 
@@ -491,11 +491,11 @@ else {
                             <td class="py-5"></td>
                             <td class="py-5"></td>
                             <td class="py-5">
-                                <p class="mb-0 text-dark py-3">Tiền Hàng</p>
+                                <p class="mb-0 text-dark py-3 fw-bolder">Tiền Hàng</p>
                             </td>
                             <td class="py-5">
                                 <div class="py-3 border-bottom border-top">
-                                    <p class="mb-0 text-dark">${subTotal}</p>
+                                    <p class="mb-0 text-dark fw-bolder">${formatVietnameseCurrency(subTotal)}</p>
                                 </div>
                             </td>
                         </tr>
@@ -504,24 +504,24 @@ else {
                             <td class="py-5"></td>
                             <td class="py-5"></td>
                             <td class="py-5">
-                                <p class="mb-0 text-dark py-3">Tiền Ship</p>
+                                <p class="mb-0 text-dark py-3 fw-bolder">Tiền Ship</p>
                             </td>
                             <td class="py-5">
                                 <div class="py-3 border-bottom border-top">
-                                    <p class="mb-0 text-dark">${shipping}</p>
+                                    <p class="mb-0 text-dark fw-bolder">${formatVietnameseCurrency(shipping)}</p>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row"></th>
                             <td class="py-5">
-                                <p class="mb-0 text-dark text-uppercase py-3">TỔNG TIỀN</p>
+                                <p class="mb-0 text-dark text-uppercase py-3 fw-bolder">TỔNG TIỀN</p>
                             </td>
                             <td class="py-5"></td>
                             <td class="py-5"></td>
                             <td class="py-5">
                                 <div class="py-3 border-bottom border-top">
-                                    <p class="mb-0 text-dark" ><span id="totalOrder">${total}</span></p>
+                                    <p class="mb-0 text-dark fw-bolder" ><span id="totalOrder">${formatVietnameseCurrency(total)}</span></p>
                                 </div>
                             </td>
                         </tr>`;

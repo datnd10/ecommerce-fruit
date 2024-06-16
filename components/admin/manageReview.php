@@ -182,9 +182,9 @@
                                     <table class="table dataTable table-responsive">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Tên Nhãn Hàng</th>
-                                                <th scope="col">Tên Sản Phẩm</th>
-                                                <th scope="col">Màu Sản Phẩm</th>
+                                                <th scope="col">Tên Loại Mặt Hàng</th>
+                                                <th scope="col">Tên Loại Quả</th>
+                                                <th scope="col">Tên Sản Phản</th>
                                                 <th scope="col">Khách Hàng</th>
                                                 <th scope="col">Đánh Giá</th>
                                                 <th scope="col">Ngày Đánh Giá</th>
@@ -211,18 +211,17 @@
                                 <div class="main">
                                     <input type="number" class="form-control productId" id="productColorId" name="productColorId" hidden="">
                                     <div class="form-group row">
-                                        <div class="col-sm-3 col-3">
+                                        <div class="col-md-2 col-2">
                                             <img class="img-fluid image" id="myImage" src="" style="width: 150px;height: 150px; object-fit: cover;" />
                                         </div>
 
                                         <div class="col-sm-6 col-6 text-left">
                                             <div class="col-12"><span>Tên Sản Phẩm: </span><span class="productName"></span></div>
-                                            <div class="col-12 mt-3"><span>Màu: </span><span class="color"></span></div>
                                             <div class="col-12 mt-3"><span>Giá: </span><span class="price"></span></div>
                                         </div>
 
                                     </div>
-                                    <div class="form-group col-md-6 text-left mb-5">
+                                    <div class="form-group col-md-6 text-left d-flex align-items-center gap-3">
                                         <label for="star" style="font-weight: bold; display: block">Sao</label>
                                         <div class="rating">
 
@@ -233,7 +232,7 @@
                                         <textarea class="form-control" id="description" name="description" rows="4" disabled></textarea>
                                     </div>
                                     <div class="upload col-md-12">
-                                        <div id="images"></div>
+                                        <div id="images" class="d-flex flex-wrap gap-3"></div>
                                     </div>
                                 </div>
                             </div>
@@ -265,8 +264,6 @@
     <script src="../../assets/js/simple-datatables.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        
-
         const handleViewComment = (id) => {
             $.ajax({
                 url: 'http://localhost:3000/database/controller/reviewController.php',
@@ -279,12 +276,11 @@
                     console.log(response);
                     $('.rating').empty();
                     $('.productName').empty();
-                    $('.color').empty();
                     $('.price').empty();
                     $('#images').empty();
                     let data = JSON.parse(response);
-                    console.log(data);
-                    let color = `<span style="display: inline-block; vertical-align: middle; margin-top: -2px;margin-left: 5px;">${data.data[0].color}</span>`;
+
+                    let color = `<span style="display: inline-block; vertical-align: middle; margin-top: -2px;margin-left: 5px;">${data.data[0].product_name}</span>`;
 
                     let htmlStar = "";
                     for (var i = 0; i < 5 - data.data[0].star; i++) {
@@ -307,7 +303,6 @@
                 }
             })
         }
-
 
         const getAllReview = () => {
             $.ajax({
@@ -337,11 +332,11 @@
                                                 <td>
                                                     <span>${item.category_name}</span>
                                                 </td>
+                                                <td>                 
+                                                    <span style="display: inline-block; vertical-align: middle; margin-top: -2px;margin-left: 5px;">${item.fruit_type_name}</span>
+                                                </td>
                                                 <td>
                                                     <span>${item.product_name}</span>
-                                                </td>
-                                                <td>                 
-                                                    <span style="display: inline-block; vertical-align: middle; margin-top: -2px;margin-left: 5px;">${item.product_color}</span>
                                                 </td>
                                                 <td>
                                                     <span>${item.user_name}</span>

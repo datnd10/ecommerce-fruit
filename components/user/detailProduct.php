@@ -65,8 +65,8 @@ if (isset($_SESSION['account'])) {
                         <div class="col-lg-12">
                             <nav>
                                 <div class="nav nav-tabs mb-3">
-                                    <button class="nav-link active border-white border-bottom-0" type="button" role="tab" id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about" aria-controls="nav-about" aria-selected="true">Description</button>
-                                    <button class="nav-link border-white border-bottom-0" type="button" role="tab" id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission" aria-controls="nav-mission" aria-selected="false">Reviews</button>
+                                    <button class="nav-link active border-white border-bottom-0" type="button" role="tab" id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about" aria-controls="nav-about" aria-selected="true">Mô tả sản phẩm</button>
+                                    <button class="nav-link border-white border-bottom-0" type="button" role="tab" id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission" aria-controls="nav-mission" aria-selected="false">Đánh giá Sản Phẩm</button>
                                 </div>
                             </nav>
                             <div class="tab-content mb-5">
@@ -116,6 +116,23 @@ if (isset($_SESSION['account'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+        function formatVietnameseCurrency(amount) {
+            try {
+                // Đảm bảo amount là một số
+                amount = parseFloat(amount);
+
+                // Sử dụng hàm toLocaleString để định dạng số và thêm dấu phẩy
+                formattedAmount = amount.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                });
+
+                return formattedAmount;
+            } catch (error) {
+                return "Số tiền không hợp lệ";
+            }
+        }
+
         $(document).ready(function() {
             function getStarIcons(rate) {
                 let stars = '';
@@ -141,7 +158,7 @@ if (isset($_SESSION['account'])) {
                         let data = JSON.parse(response);
                         let imgActive = `${data.product_images[0].image}`;
                         let imgHtml = `<div class="border rounded">
-                                    <img src="../../database/uploads/${data.product_images[0].image}" class="img-fluid rounded w-100%" id="mainImg" alt="Image">                     
+                                    <img src="../../database/uploads/${data.product_images[0].image}" class="img-fluid rounded w-100%" id="mainImg" alt="Image" style="width: 636px; height: 500px; object-fit: cover">                     
                             </div>`
                         $('.imagesProduct').html(imgHtml);
 
@@ -153,12 +170,12 @@ if (isset($_SESSION['account'])) {
                                     ${getStarIcons(data.product_details[0].rate)}
                                 </div>
                                 <div class="mb-3">|</div>
-                                <p class="mb-3">Da ban: <span class="fw-bold">${data.product_details[0].sold_quantity}</span></p>
+                                <p class="mb-3">Đã Bán: <span class="fw-bold">${data.product_details[0].sold_quantity}</span></p>
                             </div>
                             <p class="mb-3">Loại: ${data.product_details[0].category_name}</p>
                             <p class="mb-3">Loại: ${data.product_details[0].fruit_type_name}</p>
-                            <p class="mb-3">So luong: ${data.product_details[0].quantity}</p>
-                            <h5 class="fw-bold mb-3">$${data.product_details[0].price} / kg</h5>
+                            <p class="mb-3">Số Lượng: ${data.product_details[0].quantity}</p>
+                            <h5 class="fw-bold mb-3">${formatVietnameseCurrency(data.product_details[0].price)} / kg</h5>
                             <div class="input-group quantity mb-5" style="width: 100px;">
                                 <div class="input-group-btn">
                                     <button class="btn btn-sm btn-minus rounded-circle bg-light border">
@@ -235,7 +252,7 @@ if (isset($_SESSION['account'])) {
                                 <div class="p-4 pb-0 rounded-bottom">
                                     <h4>${element.product_name}</h4>
                                     <div class="d-flex justify-content-between flex-lg-wrap">
-                                        <p class="text-dark fs-5 fw-bold">$${element.price} / kg</p>
+                                        <p class="text-dark fs-5 fw-bold">${formatVietnameseCurrency(element.price)} / kg</p>
                                     </div>
                                 </div>
                                 </a>
@@ -261,7 +278,7 @@ if (isset($_SESSION['account'])) {
                             htmlListImage += `
                             <div class="border ${element.image == imgActive ? 'border-5' : ''} border-primary rounded position-relative vesitable-item" style="cursor:pointer">
                                 <div class="vesitable-img">
-                                    <img src="../../database/uploads/${element.image}" class="img-fluid w-100 rounded-top" alt="">
+                                    <img src="../../database/uploads/${element.image}" class="img-fluid w-100 rounded-top" alt="" style="width: 117px; height: 117px; object-fit: cover">
                                 </div>
                             </div>`
                         });

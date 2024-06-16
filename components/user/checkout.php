@@ -74,14 +74,14 @@ if (!isset($_SESSION['account'])) {
                                     Chỉnh sửa
                                 </span>
                             </label>
-                            <input type="text" class="form-control" placeholder="Địa Chỉ Nhận Hàng" name="address" required id="address">
+                            <input type="text" class="form-control" disabled placeholder="Địa Chỉ Nhận Hàng" name="address" required id="address">
                         </div>
                         <div class="form-item">
                             <label for="shipping" class="form-label my-3 fw-bolder">Vận Chuyện <sup class="text-danger">*</sup></label>
                             <select id="shipping" class="form-select" name="shipping">
-                                <option value="1" class="20000">Chuyển phát thường (Nhận Hàng Sau 1 Tuần)</option>
-                                <option value="2" class="25000">Chuyển phát nhanh (Nhận Hàng Trong Khoảng 4 đến 6 ngày)</option>
-                                <option value="3" class="30000">Chuyển phát hỏa tốc (Nhận Hàng Trong Khoảng 1 đến 3 ngày)</option>
+                                <option value="30000" class="20000">Chuyển phát thường (Nhận Hàng Sau 1 Tuần)</option>
+                                <option value="40000" class="25000">Chuyển phát nhanh (Nhận Hàng Trong Khoảng 4 đến 6 ngày)</option>
+                                <option value="50000" class="30000">Chuyển phát hỏa tốc (Nhận Hàng Trong Khoảng 1 đến 3 ngày)</option>
                             </select>
                         </div>
 
@@ -143,11 +143,11 @@ if (!isset($_SESSION['account'])) {
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Products</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">Quantity</th>
-                                        <th scope="col">Total</th>
+                                        <th scope="col">Sản Phẩm</th>
+                                        <th scope="col">Tên</th>
+                                        <th scope="col">Giá</th>
+                                        <th scope="col">Số Lượng</th>
+                                        <th scope="col">Tổng Tiền</th>
                                     </tr>
                                 </thead>
                                 <tbody class="listItem">
@@ -156,7 +156,7 @@ if (!isset($_SESSION['account'])) {
                             </table>
                         </div>
                         <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                            <button type="button" class="submitBtn btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Place Order</button>
+                            <button type="button" class="submitBtn btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Đặt Hàng</button>
                         </div>
                     </div>
                 </div>
@@ -288,12 +288,43 @@ if (!isset($_SESSION['account'])) {
                 let shippingCost = parseInt($('#shipping').val());
                 let total = subTotal + shippingCost;
 
-                $('.listItem .subtotal').text('$ ' + subTotal.toFixed(2));
-                $('.listItem .shipping').text('$ ' + shippingCost.toFixed(2));
-                $('.listItem .total').text('$ ' + total.toFixed(2));
+                $('.listItem .subtotal').text(subTotal);
+                $('.listItem .shipping').text(shippingCost);
+                $('.listItem .total').text(total);
             });
         }
 
+        function formatVietnameseCurrency(amount) {
+            try {
+                // Đảm bảo amount là một số
+                amount = parseFloat(amount);
+
+                // Sử dụng hàm toLocaleString để định dạng số và thêm dấu phẩy
+                formattedAmount = amount.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                });
+
+                return formattedAmount;
+            } catch (error) {
+                return "Số tiền không hợp lệ";
+            }
+        }
+
+        function convertVietnameseCurrency(currencyString) {
+            // Xóa ký hiệu "₫" và khoảng trắng
+            let amountNoSymbol = currencyString.replace(" ₫", "");
+
+            // Xóa dấu chấm
+            let amountNoDots = amountNoSymbol.replace(/\./g, "");
+
+            // Chuyển đổi thành số nguyên
+            let amountAsNumber = parseInt(amountNoDots);
+
+            return amountAsNumber;
+        }
+
+        let subTotalCart = 0;
         function init() {
             return new Promise((resolve, reject) => {
                 $('#fullName').val(decodedSessionValue.fullname);
@@ -320,13 +351,13 @@ if (!isset($_SESSION['account'])) {
                                     </div>
                                 </th>
                                 <td class="py-5">${item.dataProduct[0].product_name}</td>
-                                <td class="py-5">$ ${item.dataProduct[0].price}</td>
+                                <td class="py-5">${formatVietnameseCurrency(item.dataProduct[0].price)}</td>
                                 <td class="py-5">${item.quantity}</td>
-                                <td class="py-5">$ ${totalItem}</td>
+                                <td class="py-5">${formatVietnameseCurrency(totalItem)}</td>
                             </tr>`;
                             subTotal += totalItem;
                         });
-
+                        subTotalCart = subTotal;
                         let shippingCost = parseInt($('#shipping').val());
                         total = subTotal + shippingCost;
 
@@ -335,11 +366,11 @@ if (!isset($_SESSION['account'])) {
                             <td class="py-5"></td>
                             <td class="py-5"></td>
                             <td class="py-5">
-                                <p class="mb-0 text-dark py-3">Subtotal</p>
+                                <p class="mb-0 text-dark py-3 fw-bolder">Tiền Hàng</p>
                             </td>
                             <td class="py-5">
                                 <div class="py-3 border-bottom border-top">
-                                    <p class="mb-0 text-dark">$ ${subTotal.toFixed(2)}</p>
+                                    <p class="mb-0 text-dark fw-bolder">${formatVietnameseCurrency(subTotal)}</p>
                                 </div>
                             </td>
                         </tr>
@@ -348,24 +379,24 @@ if (!isset($_SESSION['account'])) {
                             <td class="py-5"></td>
                             <td class="py-5"></td>
                             <td class="py-5">
-                                <p class="mb-0 text-dark py-3">Shipping</p>
+                                <p class="mb-0 text-dark py-3 fw-bolder">Vận Chuyển</p>
                             </td>
                             <td class="py-5">
                                 <div class="py-3 border-bottom border-top">
-                                    <p class="mb-0 text-dark">$ ${shippingCost.toFixed(2)}</p>
+                                    <p class="mb-0 text-dark fw-bolder">${formatVietnameseCurrency(shippingCost)}</p>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row"></th>
                             <td class="py-5">
-                                <p class="mb-0 text-dark text-uppercase py-3">TOTAL</p>
+                                <p class="mb-0 text-dark text-uppercase py-3 fw-bolder">TỔNG TIỀN</p>
                             </td>
                             <td class="py-5"></td>
                             <td class="py-5"></td>
                             <td class="py-5">
                                 <div class="py-3 border-bottom border-top">
-                                    <p class="mb-0 text-dark" >$ <span id="totalOrder">${total.toFixed(2)}</span></p>
+                                    <p class="mb-0 text-dark fw-bolder" ><span id="totalOrder">${formatVietnameseCurrency(total)}</span></p>
                                 </div>
                             </td>
                         </tr>`;
@@ -417,9 +448,9 @@ if (!isset($_SESSION['account'])) {
                             name: $('#fullName').val(),
                             phone: $('#phone').val(),
                             address: $('#address').val(),
-                            shipping: $('#shipping').val(),
+                            shipping: convertVietnameseCurrency($('#shipping').val()),
                             message: $('#message').val(),
-                            totalOrder: $('#totalOrder').text(),
+                            totalOrder: convertVietnameseCurrency( $('#totalOrder').text()),
                             payment: $('#payment').find(':selected').val(),
                             action: 'checkout'
                         }
@@ -457,7 +488,6 @@ if (!isset($_SESSION['account'])) {
                                 type: 'POST',
                                 data: data,
                                 success: (response) => {
-                                    console.log(response);
                                     switch (response) {
                                         case "success":
                                             Swal.fire({
@@ -487,22 +517,23 @@ if (!isset($_SESSION['account'])) {
         init().then(() => {
             var urlParams = new URLSearchParams(window.location.search);
             var id = urlParams.get('vnp_TransactionStatus');
+            var message = urlParams.get('vnp_OrderInfo');
             if (id == '00' && id != null) {
-
+                $('#message').val(message);
+                const totalOrder = urlParams.get('vnp_Amount') / 100; 
                 var total = urlParams.get('vnp_Amount');
                 var data = {
                     id: decodedSessionValue.user_id,
                     name: $('#fullName').val(),
                     phone: $('#phone').val(),
                     address: $('#address').val(),
-                    shipping: $('#shipping').val(),
+                    shipping: totalOrder - subTotalCart,
                     message: $('#message').val(),
-                    totalOrder: $('#totalOrder').text(),
+                    totalOrder: totalOrder,
                     payment: "banking",
                     payment_status: 'paid',
                     action: 'checkout'
                 }
-                console.log(data);
                 $.ajax({
                     url: 'http://localhost:3000/components/sendMail.php',
                     type: 'POST',
