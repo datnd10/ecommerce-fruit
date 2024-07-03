@@ -91,7 +91,7 @@ if (isset($_SESSION['account'])) {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Nhận Diện Loại Quả</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" id="closePredict" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-item d-flex flex-column align-items-center">
@@ -181,8 +181,8 @@ if (isset($_SESSION['account'])) {
                     <div class="row g-4">
                         <div class="col-xl-3">
                             <div class="input-group w-100 mx-auto d-flex">
-                                <input type="search" id="search" class="form-control p-3" placeholder="tìm kiếm" aria-describedby="search-icon-1">
-                                <span id="search-icon-1" onclick="getAllProducts()" style="cursor:pointer" class="input-group-text p-3 hover"><i class="fa fa-search"></i></span>
+                                <input type="search" id="search" class="form-control p-3" placeholder="Tìm kiếm" aria-describedby="search-icon-1">
+                                <span id="search-icon-1" style="cursor:pointer" class="input-group-text p-3 hover btnSearch"><i class="fa fa-search"></i></span>
                             </div>
                         </div>
                         <div class="col-6"></div>
@@ -212,8 +212,8 @@ if (isset($_SESSION['account'])) {
                                 <div class="col-lg-12">
                                     <div class="mb-3">
                                         <h4 class="mb-2">Giá</h4>
-                                        <input type="range" class="form-range w-100" id="rangeInput" name="rangeInput" min="0" max="500" value="0" oninput="amount.value=rangeInput.value">
-                                        <output id="amount" name="amount" min-velue="0" max-value="500" for="rangeInput">0</output>
+                                        <input type="range" class="form-range w-100" id="rangeInput" name="rangeInput" min="0" max="50000" value="0" oninput="updateOutput()">
+                                        <output id="amount" name="amount" min-velue="0" max-value="50000" for="rangeInput">0</output>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -282,6 +282,7 @@ if (isset($_SESSION['account'])) {
     <!-- Template Javascript -->
     <script src="../../assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function formatVietnameseCurrency(amount) {
             try {
@@ -300,6 +301,25 @@ if (isset($_SESSION['account'])) {
             }
         }
 
+
+        document.getElementById('exampleModal').addEventListener('hidden.bs.modal', function() {
+            document.getElementById('avatar').value = '';
+            document.getElementById('avatarDisplay').src = '';
+            document.getElementById('spinnerContainer').classList.add('d-none');
+            document.querySelector('.predicted').classList.add('d-none');
+        });
+
+        function updateOutput() {
+            const rangeInput = document.getElementById('rangeInput');
+            const amountOutput = document.getElementById('amount');
+            amountOutput.value = formatVietnameseCurrency(rangeInput.value);
+        }
+
+        // Initialize the output with the default value
+        document.addEventListener('DOMContentLoaded', (event) => {
+            updateOutput();
+        });
+
         const loadFile = function(event) {
 
             $('.predicted').addClass('d-none');
@@ -313,9 +333,7 @@ if (isset($_SESSION['account'])) {
 
         function uploadFile() {
             const fileInput = document.getElementById('avatar');
-            console.log(1);
             const file = fileInput.files[0];
-            console.log(file);
             if (file) {
                 const reader = new FileReader();
 
@@ -336,49 +354,89 @@ if (isset($_SESSION['account'])) {
                         .then(function(response) {
                             $('#spinnerContainer').addClass('d-none');
                             const result = response.data.predictions[0].class;
-                            console.log(result);
+                            let fruitTypeValue;
                             switch (result) {
                                 case 'WATERMELON':
-                                    $('.predicted').text('Đây là quả dưa hấu');
+                                    fruitTypeValue = 'dưa hấu';
                                     break;
                                 case 'APPLE':
-                                    $('.predicted').text('Đây là quả táo');
+                                    fruitTypeValue = 'táo';
                                     break;
                                 case 'ONIONS':
-                                    $('.predicted').text('Đây là quả củ hành');
+                                    fruitTypeValue = 'hành';
                                     break;
                                 case 'PINEAPLE':
-                                    $('.predicted').text('Đây là quả dứa');
+                                    fruitTypeValue = 'dứa';
                                     break;
                                 case 'TOMATO':
-                                    $('.predicted').text('Đây là quả cà chua');
+                                    fruitTypeValue = 'cà chua';
                                     break;
                                 default:
-                                    $('.predicted').text('Không xác định');
+                                    Swal.fire({
+                                        title: 'Có gì đó sai sót',
+                                        icon: 'error',
+                                    })
                                     break;
                             }
+                            $(`#${fruitTypeValue}`).prop('checked', true);
+                            $('#closePredict').click();
 
-                            $('.predicted').removeClass('d-none');
-                            console.log(response.data);
+                            getAllProducts();
                         })
                         .catch(function(error) {
-                            console.log(error.message);
+                            console.log(1);
                         });
                 };
-
                 reader.readAsDataURL(file);
             } else {
-                console.log("No file selected");
+                Swal.fire({
+                    title: 'Chưa có ảnh',
+                    icon: 'warning'
+                })
             }
         }
 
-        document.getElementById('exampleModal').addEventListener('hidden.bs.modal', function() {
-            document.getElementById('avatar').value = '';
-            document.getElementById('avatarDisplay').src = '';
-            document.getElementById('spinnerContainer').classList.add('d-none');
-            document.querySelector('.predicted').classList.add('d-none');
-        });
-
+        const getAllProducts = () => {
+            var data = {
+                'search': $('#search').val(),
+                'sort': $('#sort').val(),
+                'price': $('#rangeInput').val(),
+                'category': $('input[name="category"]:checked').val(),
+                'fruit-type': $('input[name="fruit-type"]:checked').val(),
+                'rate': $('input[name="rate"]:checked').val(),
+                'action': 'getAllProduct'
+            }
+            console.log(data);
+            $.ajax({
+                url: 'http://localhost:3000/database/controller/homeController.php',
+                type: 'GET',
+                data: data,
+                success: (response) => {
+                    let data = JSON.parse(response);
+                    $('.list-fruits').empty();
+                    const optionsHtml = data
+                        .filter(item => item.is_active == 1)
+                        .map(item => `         
+                            <div class="col-md-6 col-lg-6 col-xl-4">
+                                <a href=detailProduct.php?id=${item.product_id}>
+                                    <div class="rounded position-relative fruite-item">
+                                        <div class="fruite-img">
+                                            <img src="../../database/uploads/${item.product_image}" class="img-fluid w-100 rounded-top" alt="" style="width: 260px; height: 260px; object-fit: cover">
+                                        </div>
+                                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                            <h4>${item.product_name}</h4>
+                                            <div class="d-flex align-items-center justify-content-between flex-lg-wrap">
+                                                <p class="text-dark fs-5 fw-bold mb-0">${formatVietnameseCurrency(item.price)} / kg</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>`)
+                        .join('');
+                    $('.list-fruits').append(optionsHtml);
+                }
+            })
+        }
 
         $(document).ready(function() {
             const getAllCategories = () => {
@@ -422,7 +480,7 @@ if (isset($_SESSION['account'])) {
                             .map(item => `<li>
                                             <div class="d-flex justify-content-between fruite-name">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" name="fruit-type" type="radio" value="${item.fruit_type_id}" id="fruit_type${item.fruit_type_id}">
+                                                    <input class="form-check-input" name="fruit-type" type="radio" value="${item.fruit_type_id}" id="${item.fruit_type_name}">
                                                      <label class="form-check-label" for="fruit_type${item.fruit_type_id}">
                                                         ${item.fruit_type_name}
                                                     </label>
@@ -459,48 +517,7 @@ if (isset($_SESSION['account'])) {
                 $('.rate').append(html);
             }
 
-            const getAllProducts = () => {
-                var data = {
-                    'search': $('#search').val(),
-                    'sort': $('#sort').val(),
-                    'price': $('#rangeInput').val(),
-                    'category': $('input[name="category"]:checked').val(),
-                    'fruit-type': $('input[name="fruit-type"]:checked').val(),
-                    'rate': $('input[name="rate"]:checked').val(),
-                    'action': 'getAllProduct'
-                }
-                $.ajax({
-                    url: 'http://localhost:3000/database/controller/homeController.php',
-                    type: 'GET',
-                    data: data,
-                    success: (response) => {
-                        console.log(response);
-                        let data = JSON.parse(response);
-                        console.log(data);
-                        $('.list-fruits').empty();
-                        const optionsHtml = data
-                            .filter(item => item.is_active == 1)
-                            .map(item => `         
-                            <div class="col-md-6 col-lg-6 col-xl-4">
-                                <a href=detailProduct.php?id=${item.product_id}>
-                                    <div class="rounded position-relative fruite-item">
-                                        <div class="fruite-img">
-                                            <img src="../../database/uploads/${item.product_image}" class="img-fluid w-100 rounded-top" alt="" style="width: 260px; height: 260px; object-fit: cover">
-                                        </div>
-                                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                            <h4>${item.product_name}</h4>
-                                            <div class="d-flex align-items-center justify-content-between flex-lg-wrap">
-                                                <p class="text-dark fs-5 fw-bold mb-0">${formatVietnameseCurrency(item.price)} / kg</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>`)
-                            .join('');
-                        $('.list-fruits').append(optionsHtml);
-                    }
-                })
-            }
+
 
             getAllProducts();
             getAllFruitTypes();
@@ -523,6 +540,10 @@ if (isset($_SESSION['account'])) {
                 if (event.keyCode === 13) {
                     getAllProducts();
                 }
+            });
+
+            $('.btnSearch').on('click', function() {
+                getAllProducts();
             });
 
             $(document).on('change', 'input[name="category"]', function() {
