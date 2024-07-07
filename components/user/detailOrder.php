@@ -145,8 +145,7 @@ session_start();
 if (!isset($_SESSION['account'])) {
     header("Location: signIn.php");
     exit;
-}
-else {
+} else {
     $account = $_SESSION['account'];
     $data = json_decode($account, true);
     $role = $data[0]['role'];
@@ -154,7 +153,7 @@ else {
         header("Location: signIn.php");
         exit;
     }
-} 
+}
 ?>
 
 <body>
@@ -430,6 +429,29 @@ else {
             }
         }
 
+        let reviews = [];
+
+        const checkReview = async () => {
+            const data = new FormData();
+
+            data.append('orderId', orderId);
+            data.append('action', 'checkReview');
+
+            $.ajax({
+                url: 'http://localhost:3000/database/controller/reviewController.php',
+                type: 'POST',
+                data: data,
+                contentType: false,
+                processData: false,
+                success: (response) => {
+                    let data = JSON.parse(response);
+                    reviews = data;
+                }
+            });
+        }
+
+        checkReview();
+
         const showOrderDetail = () => {
             $.ajax({
                 url: 'http://localhost:3000/database/controller/orderController.php',
@@ -439,7 +461,7 @@ else {
                     orderId: orderId,
                 },
                 success: (response) => {
-                    console.log(response);
+                    console.log(reviews);
                     let data = JSON.parse(response);
                     $('.time').html(data.information[0].created_at);
                     $('#fullName').val(data.information[0].name);
@@ -479,7 +501,11 @@ else {
                                 <td class="py-5">${formatVietnameseCurrency(total)}</td>`;
 
                         if (data.information[0].status == 'received') {
-                            html += `<td class="py-5" onclick="handleReview(${item.product_id})" data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor: pointer;"><i class="fas fa-pen fs-5 text-success"></i></td>`;
+                            if (reviews.find(review => review.product_id == item.product_id)) {
+                                console.log(1);
+                            } else {
+                                html += `<td class="py-5" onclick="handleReview(${item.product_id})" data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor: pointer;"><i class="fas fa-pen fs-5 text-success"></i></td>`;
+                            }
                         }
                         html += `</tr>`;
                     })
@@ -551,6 +577,9 @@ else {
             })
         }
 
+
+
+
         function resetModal() {
             $('#description').val(''); // Reset description
             $('.fa-star').removeClass('orange'); // Remove orange class from stars
@@ -596,10 +625,11 @@ else {
             data.append('id', $('#productId').val());
             data.append('description', $('#description').val());
             data.append('rate', $('.fa-star.orange').length);
+            data.append('orderId', orderId);
             for (let i = 0; i < listImages.length; i++) {
                 data.append('images[]', listImages[i]);
             }
-            data.append('action', 'addReview'); 
+            data.append('action', 'addReview');
 
             $.ajax({
                 url: 'http://localhost:3000/database/controller/reviewController.php',

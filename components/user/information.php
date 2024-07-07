@@ -113,7 +113,7 @@ if (!isset($_SESSION['account'])) {
                                     <div class="mb-3">
                                         <label for="city" class="form-label" style="font-weight: bold">Thành Phố:</label>
                                         <select class="form-select" id="city" aria-label=".form-select-sm" required name="city">
-                                            <option value="" selected>Chọn Thành Phố</option>
+                                            <!-- <option value="" selected>Chọn Thành Phố</option> -->
                                         </select>
                                     </div>
                                     <div class="mb-3">
@@ -185,29 +185,77 @@ if (!isset($_SESSION['account'])) {
             renderCity(result.data);
         });
 
+        // function renderCity(data) {
+        //     for (const x of data) {
+        //         var opt = document.createElement('option');
+        //         opt.value = x.Name;
+        //         opt.text = x.Name;
+        //         opt.setAttribute('data-id', x.Id);
+        //         citis.options.add(opt);
+        //     }
+        //     citis.onchange = function() {
+        //         district.length = 1;
+        //         ward.length = 1;
+        //         if (this.options[this.selectedIndex].dataset.id != "") {
+        //             const result = data.filter(n => n.Id === this.options[this.selectedIndex].dataset.id);
+
+        //             for (const k of result[0].Districts) {
+        //                 var opt = document.createElement('option');
+        //                 opt.value = k.Name;
+        //                 opt.text = k.Name;
+        //                 opt.setAttribute('data-id', k.Id);
+        //                 district.options.add(opt);
+        //             }
+        //         }
+        //     };
+        //     district.onchange = function() {
+        //         ward.length = 1;
+        //         const dataCity = data.filter((n) => n.Id === citis.options[citis.selectedIndex].dataset.id);
+        //         if (this.options[this.selectedIndex].dataset.id != "") {
+        //             const dataWards = dataCity[0].Districts.filter(n => n.Id === this.options[this.selectedIndex].dataset.id)[0].Wards;
+
+        //             for (const w of dataWards) {
+        //                 var opt = document.createElement('option');
+        //                 opt.value = w.Name;
+        //                 opt.text = w.Name;
+        //                 opt.setAttribute('data-id', w.Id);
+        //                 wards.options.add(opt);
+        //             }
+        //         }
+        //     };
+        // }
         function renderCity(data) {
-            for (const x of data) {
+            const cityIdToInclude = '79'; // The ID of the city you want to include
+
+            const filteredData = data.filter(city => city.Id === cityIdToInclude);
+            for (const x of filteredData) {
                 var opt = document.createElement('option');
                 opt.value = x.Name;
                 opt.text = x.Name;
                 opt.setAttribute('data-id', x.Id);
-                citis.options.add(opt);
-            }
-            citis.onchange = function() {
-                district.length = 1;
-                ward.length = 1;
-                if (this.options[this.selectedIndex].dataset.id != "") {
-                    const result = data.filter(n => n.Id === this.options[this.selectedIndex].dataset.id);
 
-                    for (const k of result[0].Districts) {
-                        var opt = document.createElement('option');
-                        opt.value = k.Name;
-                        opt.text = k.Name;
-                        opt.setAttribute('data-id', k.Id);
-                        district.options.add(opt);
-                    }
-                }
-            };
+                citis.options.add(opt);
+                opt.disabled = true;
+            }
+            console.log(data);
+
+            district.length = 1;
+            ward.length = 1;
+
+            console.log(this.op);
+
+
+            const result = data.filter(n => n.Id === '79');
+
+            for (const k of result[0].Districts) {
+                var opt = document.createElement('option');
+                opt.value = k.Name;
+                opt.text = k.Name;
+                opt.setAttribute('data-id', k.Id);
+                district.options.add(opt);
+            }
+
+
             district.onchange = function() {
                 ward.length = 1;
                 const dataCity = data.filter((n) => n.Id === citis.options[citis.selectedIndex].dataset.id);
@@ -234,6 +282,15 @@ if (!isset($_SESSION['account'])) {
             const selectedDistrict = districts.options[districts.selectedIndex].value;
             const selectedWard = wards.options[wards.selectedIndex].value;
             const addressChange = $('#AddressChange').val();
+            if (selectedCity == '' || selectedDistrict == '' || selectedWard == '' || addressChange == '') {
+                Swal.fire({
+                    text: "Điền đầy đủ thông tin địa chỉ",
+                    icon: 'error',
+                })
+
+                return;
+            }
+
             const newAddress = `${normalizeText(addressChange)}, ${normalizeText(selectedWard)}, ${normalizeText(selectedDistrict)}, ${normalizeText(selectedCity)}`;
             Swal.fire({
                 text: "Cập Nhật Địa Chỉ Thành Công",

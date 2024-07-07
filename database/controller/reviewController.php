@@ -24,15 +24,25 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProductById') {
     echo json_encode($data);
 }
 
+if (isset($_POST['action']) && $_POST['action'] == 'checkReview') {
+    session_start();
+    $orderId = $_POST['orderId'];
+    $userData = json_decode($_SESSION['account'], true);
+    $user_id = $userData[0]['user_id'];
+    $sql3 = "SELECT product_id FROM `review` WHERE user_id = '$user_id' AND order_id = '$orderId';";
+    $rs = Query($sql3, $connection);
+    echo json_encode($rs);
+}
+
 if (isset($_POST['action']) && $_POST['action'] == 'addReview') {
     session_start();
     $id = $_POST['id'];
     $description = $_POST['description'];
     $rate = $_POST['rate'];
+    $orderId = $_POST['orderId'];
     $userData = json_decode($_SESSION['account'], true);
     $user_id = $userData[0]['user_id'];
-
-    $sql2 = "INSERT INTO `review` ( `content`, `star`, `user_id`,  `product_id`) VALUES ('$description','$rate', '$user_id','$id')";
+    $sql2 = "INSERT INTO `review` ( `content`, `star`, `user_id`,  `product_id`, `order_id`) VALUES ('$description','$rate', '$user_id','$id', '$orderId')";
     $data = Query($sql2, $connection);
     $sql3 = "UPDATE product p
     SET p.rate = CEIL((
